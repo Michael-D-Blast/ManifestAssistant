@@ -12,15 +12,14 @@ public:
     DependencyPair();
     ~DependencyPair();
 
-    void setParent(QString parentInDependencyPair);
-    void setChild(QString childInDependencyPair);
-    QString getParent() const;
-    QString getChild() const;
-    bool isRelationOfParent(class Component component) const;
+    void setParent(QString name, QString tag);
+    void setChild(QString name, QString tag);
+    Component getParent() const;
+    Component getChild() const;
 
 private:
-    QString parent;
-    QString child;
+    Component parent;
+    Component child;
 
 };
 

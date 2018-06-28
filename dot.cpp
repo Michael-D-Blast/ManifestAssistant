@@ -43,8 +43,8 @@ void Dot::displayDependencyTree()
 {
     for (int i = 0; i < dependencyTree.size(); i++)
     {
-        qDebug() << "[" << i << "]" << " parent: " << dependencyTree.at(i).getParent();
-        qDebug() << "[" << i << "]" << " child: " << dependencyTree.at(i).getChild();
+        qDebug() << "[" << i << "]" << " parent: " << dependencyTree.at(i).getParent().getName();
+        qDebug() << "[" << i << "]" << " child: " << dependencyTree.at(i).getChild().getName();
     }
 }
 
@@ -101,9 +101,16 @@ void Dot::processLineOfDependencyTree(QString line)
 {
     if (line.contains("->")) {
         line.remove(QChar(';'));
+        line.remove(QChar('"'));
+
         DependencyPair pair;
-        pair.setParent(line.section(' ', 0, 0));
-        pair.setChild(line.section(' ', 2, 2));
+
+        QString parent = line.section(' ', 0, 0);
+        QString child = line.section(' ', 2, 2);
+
+        pair.setParent(parent.section('@', 0, 0), parent.section('@', 2, 2));
+        pair.setChild(child.section('@', 0, 0), child.section('@', 2, 2));
+
         dependencyTree << pair;
     }
 }
@@ -138,12 +145,13 @@ int Dot::getParentPosInLevel(int pairIndex, int level)
     }
 
     QList<Component> list = dependencyPyramid[level];
-    QString parent = dependencyTree[pairIndex].getParent();
+    Component parent = dependencyTree[pairIndex].getParent();
 
     int i;
     for (i = 0; i < list.size(); i++)
     {
-        if (parent == list.at(i).getName())
+//        if (parent == list.at(i).getName())
+        if(parent.is(list.at(i)))
             return i;
     }
 
@@ -158,12 +166,13 @@ int Dot::getChildPosInLevel(int pairIndex, int level)
     }
 
     QList<Component> list = dependencyPyramid[level];
-    QString child = dependencyTree[pairIndex].getChild();
+    Component child = dependencyTree[pairIndex].getChild();
 
     int i;
     for (i = 0; i < list.size(); i++)
     {
-        if (child == list.at(i).getName())
+//        if (child == list.at(i).getName())
+        if (child.is(list.at(i)))
             return i;
     }
 
@@ -192,30 +201,30 @@ DependencyPair::~DependencyPair()
 
 }
 
-void DependencyPair::setParent(QString parentInDependencyPair)
+void DependencyPair::setParent(QString name, QString tag)
 {
-    parent = parentInDependencyPair;
+    parent.setName(name);
+    parent.setTag(tag);
 }
 
-void DependencyPair::setChild(QString childInDependencyPair)
+void DependencyPair::setChild(QString name, QString tag)
 {
-    child = childInDependencyPair;
+    child.setName(name);
+    child.setTag(tag);
 }
 
-QString DependencyPair::getParent() const
+Component DependencyPair::getParent() const
 {
     return parent;
 }
 
-QString DependencyPair::getChild() const
+Component DependencyPair::getChild() const
 {
     return child;
 }
 
-bool DependencyPair::isRelationOfParent(Component component) const
-{
-    return (parent == component.getName());
-}
+
+
 
 
 

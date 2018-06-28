@@ -10,8 +10,11 @@ public:
     Component(QString nameOfComponent);
     ~Component();
 
+    void setName(QString nameToBe);
+    void setTag(QString tagToBe);
     QString getName() const;
     QString getTag() const;
+    virtual bool is(Component anotherComponent);
 
 private:
     QString name;
