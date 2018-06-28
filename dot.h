@@ -4,25 +4,8 @@
 #include <QList>
 #include <QFile>
 #include <QByteArray>
+#include "component.h"
 
-
-class Component {
-public:
-    Component();
-    Component(QString nameOfComponent, int levelOfComponent);
-    ~Component();
-
-    QString getName() const;
-    int getLevel() const;
-    bool isInLevel(int whichLevel) const;
-
-private:
-    QString name;
-    int level;
-};
-
-typedef QList<Component> ComponentsList;
-typedef QList<ComponentsList> ComponentsMesh;
 
 class DependencyPair {
 public:

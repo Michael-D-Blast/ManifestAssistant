@@ -13,9 +13,10 @@ Dialog::~Dialog()
     delete ui;
 }
 
-void Dialog::on_pushButton_4_clicked()
+
+void Dialog::on_BtnOK_clicked()
 {
     backendThread.start();
 
-    accept();
+    ui->BtnOK->setEnabled(false);
 }

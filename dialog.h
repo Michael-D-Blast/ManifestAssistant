@@ -21,7 +21,8 @@ public:
     Dot dot;
 
 private slots:
-    void on_pushButton_4_clicked();
+
+    void on_BtnOK_clicked();
 
 private:
     Ui::Dialog *ui;

@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         dialog.cpp \
     backendthread.cpp \
-    dot.cpp
+    dot.cpp \
+    component.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
-    dot.h
+    dot.h \
+    component.h
 
 FORMS    += dialog.ui
