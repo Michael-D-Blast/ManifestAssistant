@@ -20,12 +20,27 @@ void Dialog::setComboxItems()
 {
     ComponentsList allComponents = dot.getAllComponentsList();
 
+    ui->cBoxName1->addItem("NULL");
+    ui->cBoxName2->addItem("NULL");
+    ui->cBoxName3->addItem("NULL");
+
     for (int i = 0; i < allComponents.size(); i++)
     {
         ui->cBoxName1->addItem(allComponents[i].getName());
         ui->cBoxName2->addItem(allComponents[i].getName());
         ui->cBoxName3->addItem(allComponents[i].getName());
     }
+
+    ui->cBoxBranch1->addItem("NULL");
+    ui->cBoxBranch2->addItem("NULL");
+    ui->cBoxBranch3->addItem("NULL");
+
+//    for (int i = 0; i < allComponents.size(); i++)
+//    {
+//        ui->cBoxBranch1->addItem(allComponents[i].getName());
+//        ui->cBoxBranch2->addItem(allComponents[i].getName());
+//        ui->cBoxBranch3->addItem(allComponents[i].getName());
+//    }
 }
 
 
