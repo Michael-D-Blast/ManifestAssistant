@@ -40,6 +40,8 @@ public:
     // Transfer dependencyPyramid to allComponentsList
     void generateAllComponentsList();
     ComponentsList getAllComponentsList();
+    virtual void setComponentToUpdate(Component componentToUpdate);
+    void displayComponentsToUpdate() const;
 
 private:
     QFile dotFile;

@@ -8,6 +8,7 @@ class Component
 public:
     Component();
     Component(QString nameOfComponent);
+    Component(QString nameOfComponent, QString tagOfComponent);
     ~Component();
 
     void setName(QString nameToBe);

@@ -110,6 +110,21 @@ ComponentsList Dot::getAllComponentsList()
     return allComponentsList;
 }
 
+void Dot::setComponentToUpdate(Component componentToUpdate)
+{
+    componentsToUpdate.append(componentToUpdate);
+}
+
+void Dot::displayComponentsToUpdate() const
+{
+    qDebug() << "Components to update are:";
+
+    for (int i = 0; i < componentsToUpdate.size(); i++)
+    {
+        qDebug() << componentsToUpdate.at(i).getName() << componentsToUpdate.at(i).getTag();
+    }
+}
+
 void Dot::processLineOfDependencyTree(QString line)
 {
     if (line.contains("->")) {

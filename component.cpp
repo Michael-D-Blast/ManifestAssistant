@@ -10,6 +10,12 @@ Component::Component(QString nameOfComponent)
     name = nameOfComponent;
 }
 
+Component::Component(QString nameOfComponent, QString tagOfComponent)
+{
+    name = nameOfComponent;
+    tag = tagOfComponent;
+}
+
 Component::~Component()
 {
 

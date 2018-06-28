@@ -16,6 +16,7 @@ Dialog::~Dialog()
     delete ui;
 }
 
+// TODO: Change the implementation, create combo boxes dynamically
 void Dialog::setComboxItems()
 {
     ComponentsList allComponents = dot.getAllComponentsList();
@@ -46,6 +47,38 @@ void Dialog::setComboxItems()
 
 void Dialog::on_BtnOK_clicked()
 {
+    QString name;
+    QString tag;
+
+    name = ui->cBoxName1->currentText();
+    tag = ui->lineEdit1->text();
+
+    // TODO: Use Rx to check tag validity
+    if (name != "NULL" && !tag.isEmpty()) {
+        Component c(name, tag);
+        dot.setComponentToUpdate(c);
+    }
+
+    name = ui->cBoxName2->currentText();
+    tag = ui->lineEdit2->text();
+
+    // TODO: Use Rx to check tag validity
+    if (name != "NULL" && !tag.isEmpty()) {
+        Component c(name, tag);
+        dot.setComponentToUpdate(c);
+    }
+
+    name = ui->cBoxName2->currentText();
+    tag = ui->lineEdit2->text();
+
+    // TODO: Use Rx to check tag validity
+    if (name != "NULL" && !tag.isEmpty()) {
+        Component c(name, tag);
+        dot.setComponentToUpdate(c);
+    }
+
+    dot.displayComponentsToUpdate();
+
     backendThread.start();
 
     ui->BtnOK->setEnabled(false);
