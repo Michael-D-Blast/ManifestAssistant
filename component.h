@@ -2,6 +2,10 @@
 #define COMPONENT_H
 
 #include <QString>
+#include <QList>
+
+typedef QList<class Component> ComponentsList;
+typedef QList<ComponentsList> ComponentsMesh;
 
 class Component
 {
@@ -17,12 +21,16 @@ public:
     QString getTag() const;
     virtual bool is(Component anotherComponent);
 
+    int checkoutToTag();
+    void appendDependency(const QString &dependentComponent);
+
 private:
     QString name;
     QString tag;
+
+    QList<QString> *dependencies;
+
 };
 
-typedef QList<Component> ComponentsList;
-typedef QList<ComponentsList> ComponentsMesh;
 
 #endif // COMPONENT_H

@@ -125,6 +125,64 @@ void Dot::displayComponentsToUpdate() const
     }
 }
 
+void Dot::updateLocalManifests()
+{
+    for (int i = dependencyPyramid.size(); i >= 0; i--)
+    {
+        ComponentsList tmpComponentsList;
+
+        for (int j = 0; j < dependencyPyramid[i].size(); j++)
+        {
+            processSingleComponent(dependencyPyramid[i][j], tmpComponentsList);
+        }
+
+        componentsToUpdate += tmpComponentsList;
+    }
+}
+
+void Dot::processSingleComponent(Component componentToProcess, ComponentsList componentsListNewAdded)
+{
+    Component component = componentToProcess;
+    Component componentSpecified = componentSpecifiedTo(component);
+
+    // alreadySpecified means this component has been specified to be updated by user
+    bool alreadySpecified = (componentSpecified.getTag() != component.getTag());
+
+    if (alreadySpecified) {
+        componentSpecified.checkoutToTag();
+
+        // TODO: check if the manifests are same
+    }
+
+    bool needUpdate;
+
+
+}
+
+bool Dot::updateSingleManifestIfNeeded(Component component)
+{
+    bool needUpdate = false;
+
+    ComponentsList dependencies;
+
+    return needUpdate;
+}
+
+Component Dot::componentSpecifiedTo(Component componentToCheck)
+{
+    Component c = componentToCheck;
+
+    for (int i = 0; i < componentsToUpdate.size(); i++)
+    {
+        if (c.getName() == componentsToUpdate[i].getName()) {
+            qDebug() << c.getName() << " needs to be updated";
+            return componentsToUpdate[i];
+        }
+    }
+
+    return c;
+}
+
 void Dot::processLineOfDependencyTree(QString line)
 {
     if (line.contains("->")) {
@@ -178,7 +236,6 @@ int Dot::getParentPosInLevel(int pairIndex, int level)
     int i;
     for (i = 0; i < list.size(); i++)
     {
-//        if (parent == list.at(i).getName())
         if(parent.is(list.at(i)))
             return i;
     }
@@ -199,7 +256,6 @@ int Dot::getChildPosInLevel(int pairIndex, int level)
     int i;
     for (i = 0; i < list.size(); i++)
     {
-//        if (child == list.at(i).getName())
         if (child.is(list.at(i)))
             return i;
     }

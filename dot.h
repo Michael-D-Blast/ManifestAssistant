@@ -42,6 +42,7 @@ public:
     ComponentsList getAllComponentsList();
     virtual void setComponentToUpdate(Component componentToUpdate);
     void displayComponentsToUpdate() const;
+    void updateLocalManifests();
 
 private:
     QFile dotFile;
@@ -58,6 +59,11 @@ private:
     int getParentPosInLevel(int pairIndex, int level);
     int getChildPosInLevel(int pairIndex, int level);
     void removeChildIfInUpperLevel(int pairIndex, int level);
+    void processSingleComponent(Component componentToProcess, ComponentsList componentsListNewAdded);
+    // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
+    bool updateSingleManifestIfNeeded(Component component);
+    // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
+    Component componentSpecifiedTo(Component componentToCheck);
 };
 
 #endif // DOT_H
