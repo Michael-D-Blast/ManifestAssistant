@@ -19,6 +19,10 @@ int main(int argc, char *argv[])
 
     w.dot.displayDependencyPyramid();
 
+    w.dot.generateAllComponentsList();
+
+    w.setComboxItems();
+
     w.show();
 
     return a.exec();

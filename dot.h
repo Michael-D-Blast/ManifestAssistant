@@ -37,6 +37,9 @@ public:
     void displayDependencyPyramid() const;
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
+    // Transfer dependencyPyramid to allComponentsList
+    void generateAllComponentsList();
+    ComponentsList getAllComponentsList();
 
 private:
     QFile dotFile;
@@ -45,6 +48,7 @@ private:
     // Component pyramid from componentsGroup
     ComponentsMesh dependencyPyramid;
     ComponentsList componentsToUpdate;
+    ComponentsList allComponentsList;   // used for items in combox
 
 
     void processLineOfDependencyTree(QString line);

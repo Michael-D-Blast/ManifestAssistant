@@ -97,6 +97,19 @@ void Dot::generateDependencyPyramidLevel0()
     dependencyPyramid << l;
 }
 
+void Dot::generateAllComponentsList()
+{
+    for (int i = 0; i < dependencyPyramid.size(); i++)
+    {
+        allComponentsList.append(dependencyPyramid[i]);
+    }
+}
+
+ComponentsList Dot::getAllComponentsList()
+{
+    return allComponentsList;
+}
+
 void Dot::processLineOfDependencyTree(QString line)
 {
     if (line.contains("->")) {

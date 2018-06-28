@@ -77,55 +77,48 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QComboBox" name="comboBox">
-      <property name="maximumSize">
-       <size>
-        <width>85</width>
-        <height>16777215</height>
-       </size>
-      </property>
-     </widget>
+     <widget class="QComboBox" name="cBoxName1"/>
     </item>
     <item row="2" column="1">
-     <widget class="QComboBox" name="comboBox_4"/>
+     <widget class="QComboBox" name="cBoxBranch1"/>
     </item>
     <item row="2" column="2">
-     <widget class="QLineEdit" name="lineEdit_3"/>
+     <widget class="QLineEdit" name="lineEdit1"/>
     </item>
     <item row="2" column="3">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="BtnAdd1">
       <property name="text">
        <string>Add</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QComboBox" name="comboBox_2"/>
+     <widget class="QComboBox" name="cBoxName2"/>
     </item>
     <item row="3" column="1">
-     <widget class="QComboBox" name="comboBox_5"/>
+     <widget class="QComboBox" name="cBoxBranch2"/>
     </item>
     <item row="3" column="2">
-     <widget class="QLineEdit" name="lineEdit_4"/>
+     <widget class="QLineEdit" name="lineEdit2"/>
     </item>
     <item row="3" column="3">
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="BtnAdd2">
       <property name="text">
        <string>Add</string>
       </property>
      </widget>
     </item>
     <item row="4" column="0">
-     <widget class="QComboBox" name="comboBox_3"/>
+     <widget class="QComboBox" name="cBoxName3"/>
     </item>
     <item row="4" column="1">
-     <widget class="QComboBox" name="comboBox_6"/>
+     <widget class="QComboBox" name="cBoxBranch3"/>
     </item>
     <item row="4" column="2">
-     <widget class="QLineEdit" name="lineEdit_5"/>
+     <widget class="QLineEdit" name="lineEdit3"/>
     </item>
     <item row="4" column="3">
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="BtnAdd3">
       <property name="text">
        <string>Add</string>
       </property>
