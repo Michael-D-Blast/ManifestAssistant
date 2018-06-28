@@ -12,3 +12,10 @@ Dialog::~Dialog()
 {
     delete ui;
 }
+
+void Dialog::on_pushButton_4_clicked()
+{
+    backendThread.start();
+
+    accept();
+}

@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QByteArray>
 
+
 class Component {
 public:
     Component();
@@ -19,6 +20,9 @@ private:
     QString name;
     int level;
 };
+
+typedef QList<Component> ComponentsList;
+typedef QList<ComponentsList> ComponentsMesh;
 
 class DependencyPair {
 public:
@@ -41,8 +45,9 @@ class Dot
 {
 public:
     Dot();
-    Dot(QString dotFileName);
+    Dot(QString dotFileName);   // absolete, use setFile
 
+    void setFile(QString file);
     bool parseDependencyTree();
     void displayDependencyTree();
 
@@ -50,18 +55,14 @@ public:
     void displayDependencyPyramid() const;
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
-    bool componentsGroupIncludes(class Component c);
-    void componentsGroupChangeComponentLevelIfDiff(class Component c);
-    void displayComponentsGroup() const;
 
 private:
-    QFile *dotFile;
+    QFile dotFile;
     // Pair information read from .dot file
-    QList<class DependencyPair> dependencyTree;
-    // Components information from dependencyTree
-    QList<class Component> componentsGroup;
+    QList<DependencyPair> dependencyTree;
     // Component pyramid from componentsGroup
-    QList<QList<class Component>> dependencyPyramid;
+    ComponentsMesh dependencyPyramid;
+    ComponentsList componentsToUpdate;
 
 
     void processLineOfDependencyTree(QString line);

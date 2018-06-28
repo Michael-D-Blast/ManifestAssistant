@@ -10,19 +10,24 @@ Dot::Dot()
 
 Dot::Dot(QString dotFileName)
 {
-    dotFile = new QFile(dotFileName);
+
+}
+
+void Dot::setFile(QString file)
+{
+    dotFile.setFileName(file);
 }
 
 bool Dot::parseDependencyTree()
 {
-    qDebug() << "Parsing the dot file" << dotFile->fileName() << endl;
+    qDebug() << "Parsing the dot file" << dotFile.fileName() << endl;
 
-    if(!dotFile->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Can't open " << dotFile->fileName() << endl;
+    if(!dotFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Can't open " << dotFile.fileName() << endl;
         return false;
     }
 
-    QTextStream in(dotFile);
+    QTextStream in(&dotFile);
     while(!in.atEnd())
     {
         QString line = in.readLine();
@@ -85,55 +90,18 @@ void Dot::displayDependencyPyramid() const
 
 void Dot::generateDependencyPyramidLevel0()
 {
-    class Component c(dependencyTree.at(0).getParent(), 0);
-    QList<class Component> l;
+    Component c(dependencyTree.at(0).getParent(), 0);
+    ComponentsList l;
 
     l << c;
     dependencyPyramid << l;
-}
-
-void Dot::generateFirstComponent()
-{
-    class Component c(dependencyTree.at(0).getParent(), 0);
-    componentsGroup << c;
-}
-
-bool Dot::componentsGroupIncludes(Component c)
-{
-    for (int i = 0; i < componentsGroup.size(); i++)
-    {
-        if (c.getName() == componentsGroup.at(i).getName()) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void Dot::componentsGroupChangeComponentLevelIfDiff(Component c)
-{
-    for (int i = 0; i < componentsGroup.size(); i++)
-    {
-        if (c.getName() == componentsGroup.at(i).getName()) {
-            if (c.getLevel() != componentsGroup.at(i).getLevel())
-                componentsGroup.replace(i, c);
-        }
-    }
-}
-
-void Dot::displayComponentsGroup() const
-{
-    for (int i = 0; i < componentsGroup.size(); i++)
-    {
-        qDebug() << componentsGroup.at(i).getName() << " in level " << componentsGroup.at(i).getLevel() << endl;
-    }
 }
 
 void Dot::processLineOfDependencyTree(QString line)
 {
     if (line.contains("->")) {
         line.remove(QChar(';'));
-        class DependencyPair pair;
+        DependencyPair pair;
         pair.setParent(line.section(' ', 0, 0));
         pair.setChild(line.section(' ', 2, 2));
         dependencyTree << pair;
@@ -142,8 +110,8 @@ void Dot::processLineOfDependencyTree(QString line)
 
 void Dot::insertPairChildToPyramidLevel(int pairIndex, int level)
 {
-    class DependencyPair p = dependencyTree[pairIndex];
-    class Component c(p.getChild(), level);
+    DependencyPair p = dependencyTree[pairIndex];
+    Component c(p.getChild(), level);
 
     // If we want to add a component to level N, it means the total levels should be at least N+1
     // There should be only two situations:
@@ -152,7 +120,7 @@ void Dot::insertPairChildToPyramidLevel(int pairIndex, int level)
     int currentMaxLevel = dependencyPyramid.size() - 1;
 
     if (currentMaxLevel == level - 1) {
-        QList<class Component> l;
+        ComponentsList l;
         dependencyPyramid << l;
         dependencyPyramid[level] << c;
     } else if (currentMaxLevel == level) {
