@@ -90,7 +90,7 @@ void Dot::displayDependencyPyramid() const
 
 void Dot::generateDependencyPyramidLevel0()
 {
-    Component c(dependencyTree.at(0).getParent(), 0);
+    Component c(dependencyTree.at(0).getParent());
     ComponentsList l;
 
     l << c;
@@ -111,7 +111,7 @@ void Dot::processLineOfDependencyTree(QString line)
 void Dot::insertPairChildToPyramidLevel(int pairIndex, int level)
 {
     DependencyPair p = dependencyTree[pairIndex];
-    Component c(p.getChild(), level);
+    Component c(p.getChild());
 
     // If we want to add a component to level N, it means the total levels should be at least N+1
     // There should be only two situations:

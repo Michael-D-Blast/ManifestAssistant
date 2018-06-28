@@ -7,16 +7,15 @@ class Component
 {
 public:
     Component();
-    Component(QString nameOfComponent, int levelOfComponent);
+    Component(QString nameOfComponent);
     ~Component();
 
     QString getName() const;
-    int getLevel() const;
-    bool isInLevel(int whichLevel) const;
+    QString getTag() const;
 
 private:
     QString name;
-    int level;
+    QString tag;
 };
 
 typedef QList<Component> ComponentsList;
