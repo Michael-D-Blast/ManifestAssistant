@@ -79,7 +79,22 @@ void Dialog::on_BtnOK_clicked()
 
     dot.displayComponentsToUpdate();
 
+    backendThread.setDot(&dot);
+
     backendThread.start();
 
     ui->BtnOK->setEnabled(false);
+}
+
+
+
+void Dialog::on_cBoxName1_currentIndexChanged(int index)
+{
+    // The first index of combo box is NULL, so index
+    if (index == 0) {
+        ui->lineEdit1->setText("");
+    } else {
+        Component c = dot.getAllComponentsList().at(index - 1);
+        ui->lineEdit1->setText(c.getTag());
+    }
 }

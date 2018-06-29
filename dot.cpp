@@ -93,6 +93,37 @@ void Dot::generateDependencyPyramid()
     }
 }
 
+QString Dot::updateTag(const QString &tag)
+{
+    QString newTag;
+
+    // BUILD can't be larger than 65535, so we can use int type here
+    int build;
+    bool ok;
+    build = tag.section('.', 3, 3).toInt(&ok, 10);
+
+    if (ok) {
+        build += 1;
+    }
+
+    newTag = tag.section('.',0, 2) + "." + QString::number(build);
+
+    return newTag;
+}
+
+void Dot::updateComponentTagInUpdateList(Component component)
+{
+    for (int i = 0; i < componentsToUpdate.size(); i++)
+    {
+        if (component.getName() == componentsToUpdate.at(i).getName()) {
+            QString tag = componentsToUpdate.at(i).getTag();
+            QString newTag = updateTag(tag);
+            componentsToUpdate[i].setTag(newTag);
+            qDebug() << "Change tag from " << tag << " to " << newTag << " for " << component.getName();
+        }
+    }
+}
+
 void Dot::displayDependencyPyramid() const
 {
     for (int level = 0; level < dependencyPyramid.size(); level++)
@@ -146,7 +177,7 @@ void Dot::displayComponentsToUpdate() const
 
 void Dot::updateLocalManifests()
 {
-    for (int i = dependencyPyramid.size(); i >= 0; i--)
+    for (int i = dependencyPyramid.size() - 1; i >= 0; i--)
     {
         ComponentsList tmpComponentsList;
 
@@ -159,9 +190,10 @@ void Dot::updateLocalManifests()
     }
 }
 
-void Dot::processSingleComponent(Component componentToProcess, ComponentsList componentsListNewAdded)
+void Dot::processSingleComponent(Component componentToProcess, ComponentsList &componentsListNewAdded)
 {
     Component component = componentToProcess;
+    // componentSpecified doesn't have dependencies !!!
     Component componentSpecified = componentSpecifiedTo(component);
 
     // alreadySpecified means this component has been specified to be updated by user
@@ -175,14 +207,45 @@ void Dot::processSingleComponent(Component componentToProcess, ComponentsList co
 
     bool needUpdate;
 
+    // It's not allowed to use the tag info in this method because we pass component.
+    // TODO: remove the restrict
+    needUpdate = updateSingleManifestIfNeeded(component);
+
+    if (needUpdate) {
+        if (alreadySpecified) {
+            // This component has been specified by user to be updated, however, as its dependency also needs to be updated,
+            // update the tag of this component in the updating component list.
+            updateComponentTagInUpdateList(componentSpecified);
+        } else {
+            componentsListNewAdded << component;
+        }
+    }
 
 }
 
+// It's not allowed to use the tag info in this method !!!
 bool Dot::updateSingleManifestIfNeeded(Component component)
 {
     bool needUpdate = false;
 
-    ComponentsList dependencies;
+    ComponentsList dependencies = component.getDependencies();
+
+    for (int i = 0; i < dependencies.size(); i++)
+    {
+        Component c = componentSpecifiedTo(dependencies[i]);
+
+        // If the tag of this component isn't same with that of this component in updated list
+        if (dependencies[i].getTag() != c.getTag()) {
+            component.updateDependencyInManifest(c);
+            needUpdate = true;
+        }
+    }
+
+    if (needUpdate) {
+        component.updateBuildInManifest();
+        component.commitChangeOfManifest();
+        component.creatNewTag();
+    }
 
     return needUpdate;
 }
@@ -325,11 +388,4 @@ Component DependencyPair::getChild() const
 {
     return child;
 }
-
-
-
-
-
-
-
 

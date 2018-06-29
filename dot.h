@@ -33,19 +33,19 @@ public:
     void setFile(QString file);
     bool parseDependencyTree();
     void displayDependencyTree();
-
     void displayDependencyPyramid() const;
+    ComponentsList getAllComponentsList();
+    virtual void setComponentToUpdate(Component componentToUpdate);
+    void displayComponentsToUpdate() const;
+
+    // Set Methods
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
     // Transfer dependencyPyramid to allComponentsList
     void generateAllComponentsList();
-    ComponentsList getAllComponentsList();
-    virtual void setComponentToUpdate(Component componentToUpdate);
-    void displayComponentsToUpdate() const;
-    void updateLocalManifests();
-
-    // Set Methods
     void generateDependencyPyramid();
+    void updateLocalManifests();
+    static QString updateTag(const QString &tag);
 
 
 private:
@@ -63,11 +63,16 @@ private:
     int getParentPosInLevel(int pairIndex, int level);
     int getChildPosInLevel(int pairIndex, int level);
     void removeChildIfInUpperLevel(int pairIndex, int level);
-    void processSingleComponent(Component componentToProcess, ComponentsList componentsListNewAdded);
+
+    // We need to change the componentsListNewAdded
+    void processSingleComponent(Component componentToProcess, ComponentsList &componentsListNewAdded);
     // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
     bool updateSingleManifestIfNeeded(Component component);
     // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
     Component componentSpecifiedTo(Component componentToCheck);
+
+    // Set Methods
+    void updateComponentTagInUpdateList(Component component);
 };
 
 #endif // DOT_H

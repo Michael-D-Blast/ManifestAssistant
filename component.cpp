@@ -44,6 +44,11 @@ QString Component::getTag() const
     return tag;
 }
 
+ComponentsList Component::getDependencies()
+{
+    return dependencies;
+}
+
 bool Component::is(Component anotherComponent)
 {
     return(name == anotherComponent.getName());
@@ -52,11 +57,40 @@ bool Component::is(Component anotherComponent)
 int Component::checkoutToTag()
 {
     qDebug() << "Dummy: checkout " << name << " to " << tag;
+
+    return 0;
 }
 
 void Component::appendDependency(Component dependentComponent)
 {
     dependencies << dependentComponent;
+}
+
+int Component::updateDependencyInManifest(Component dependency)
+{
+    qDebug() << "Dummy: updating " << dependency.getName() << " to " << dependency.getTag() << " in the manifest of " << name;
+
+    return 0;
+}
+
+// It's not allowed to use the tag in this method;
+int Component::updateBuildInManifest()
+{
+    qDebug() << "Dummy: updating the tag of " << name;
+
+    return 0;
+}
+
+// It's not allowed to use the tag in this method;
+int Component::commitChangeOfManifest()
+{
+    qDebug() << "Dummy: commit change of manifest";
+}
+
+// It's not allowed to use the tag in this method;
+int Component::creatNewTag()
+{
+    qDebug() << "Dummy: creat a new tag for " << name;
 }
 
 void Component::displayDependencies() const

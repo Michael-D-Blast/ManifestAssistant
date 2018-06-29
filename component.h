@@ -16,17 +16,21 @@ public:
     ~Component();
 
     // Get Methods
-    void setName(QString nameToBe);
-    void setTag(QString tagToBe);
     QString getName() const;
     QString getTag() const;
+    ComponentsList getDependencies();
     virtual bool is(Component anotherComponent);
-
-    int checkoutToTag();
-    void appendDependency(Component dependentComponent);
     void displayDependencies() const;
 
     // Set Methods
+    void setName(QString nameToBe);
+    void setTag(QString tagToBe);
+    int checkoutToTag();
+    void appendDependency(Component dependentComponent);
+    int updateDependencyInManifest(Component dependency);
+    int updateBuildInManifest();
+    int commitChangeOfManifest();
+    int creatNewTag();
 
 private:
     QString name;

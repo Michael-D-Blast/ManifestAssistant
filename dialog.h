@@ -26,6 +26,9 @@ private slots:
 
     void on_BtnOK_clicked();
 
+
+    void on_cBoxName1_currentIndexChanged(int index);
+
 private:
     Ui::Dialog *ui;
 
