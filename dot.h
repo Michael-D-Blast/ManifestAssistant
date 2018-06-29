@@ -29,11 +29,11 @@ public:
     Dot();
     Dot(QString dotFileName);   // absolete, use setFile
 
+    // Get Methods
     void setFile(QString file);
     bool parseDependencyTree();
     void displayDependencyTree();
 
-    void generateDependencyPyramid();
     void displayDependencyPyramid() const;
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
@@ -43,6 +43,10 @@ public:
     virtual void setComponentToUpdate(Component componentToUpdate);
     void displayComponentsToUpdate() const;
     void updateLocalManifests();
+
+    // Set Methods
+    void generateDependencyPyramid();
+
 
 private:
     QFile dotFile;

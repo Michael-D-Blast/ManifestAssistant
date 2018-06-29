@@ -15,6 +15,7 @@ public:
     Component(QString nameOfComponent, QString tagOfComponent);
     ~Component();
 
+    // Get Methods
     void setName(QString nameToBe);
     void setTag(QString tagToBe);
     QString getName() const;
@@ -23,12 +24,15 @@ public:
 
     int checkoutToTag();
     void appendDependency(const QString &dependentComponent);
+    void displayDependencies() const;
+
+    // Set Methods
 
 private:
     QString name;
     QString tag;
 
-    QList<QString> *dependencies;
+    QList<QString> dependencies;
 
 };
 

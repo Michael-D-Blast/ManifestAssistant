@@ -3,25 +3,25 @@
 
 Component::Component()
 {
-    dependencies = new QList<QString>;
+
 }
 
 Component::Component(QString nameOfComponent)
 {
     name = nameOfComponent;
-    dependencies = new QList<QString>;
+
 }
 
 Component::Component(QString nameOfComponent, QString tagOfComponent)
 {
     name = nameOfComponent;
     tag = tagOfComponent;
-    dependencies = new QList<QString>;
+
 }
 
 Component::~Component()
 {
-    delete dependencies;
+
 }
 
 void Component::setName(QString nameToBe)
@@ -56,6 +56,14 @@ int Component::checkoutToTag()
 
 void Component::appendDependency(const QString &dependentComponent)
 {
-    *dependencies << dependentComponent;
+    dependencies << dependentComponent;
+}
+
+void Component::displayDependencies() const
+{
+    for (int i = 0; i < dependencies.size(); i++)
+    {
+        qDebug() << "\t" << dependencies.at(i);
+    }
 }
 

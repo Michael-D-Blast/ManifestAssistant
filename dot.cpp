@@ -73,17 +73,33 @@ void Dot::generateDependencyPyramid()
 
         removeChildIfInUpperLevel(currentPair, currentLevel);
     }
+
+    // Add dependencies for each component
+    // TODO: Optimize the algorithm
+    for (int i = 0; i < dependencyPyramid.size(); i++)
+    {
+        for (int j = 0; j < dependencyPyramid[i].size(); j++)
+        {
+            for (int k = 0; k < dependencyTree.size(); k++)
+            {
+                if (dependencyTree[k].getParent().getName() == dependencyPyramid[i][j].getName()) {
+                    dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild().getName());
+                }
+            }
+        }
+    }
 }
 
 void Dot::displayDependencyPyramid() const
 {
     for (int level = 0; level < dependencyPyramid.size(); level++)
     {
-        qDebug() << "Level " << level << " :" << endl;
+        qDebug() << "Level " << level << " :";
 
         for (int pos = 0; pos < dependencyPyramid.at(level).size(); pos++)
         {
-            qDebug() << dependencyPyramid.at(level).at(pos).getName() << "\t";
+            qDebug() << dependencyPyramid.at(level).at(pos).getName();
+            dependencyPyramid.at(level).at(pos).displayDependencies();
         }
     }
 }
