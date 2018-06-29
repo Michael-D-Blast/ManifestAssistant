@@ -54,7 +54,7 @@ int Component::checkoutToTag()
     qDebug() << "Dummy: checkout " << name << " to " << tag;
 }
 
-void Component::appendDependency(const QString &dependentComponent)
+void Component::appendDependency(Component dependentComponent)
 {
     dependencies << dependentComponent;
 }
@@ -63,7 +63,7 @@ void Component::displayDependencies() const
 {
     for (int i = 0; i < dependencies.size(); i++)
     {
-        qDebug() << "\t" << dependencies.at(i);
+        qDebug() << "\t" << dependencies.at(i).getName() << "@" << dependencies.at(i).getTag();
     }
 }
 

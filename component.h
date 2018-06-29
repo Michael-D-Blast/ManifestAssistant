@@ -23,7 +23,7 @@ public:
     virtual bool is(Component anotherComponent);
 
     int checkoutToTag();
-    void appendDependency(const QString &dependentComponent);
+    void appendDependency(Component dependentComponent);
     void displayDependencies() const;
 
     // Set Methods
@@ -32,7 +32,7 @@ private:
     QString name;
     QString tag;
 
-    QList<QString> dependencies;
+    ComponentsList dependencies;
 
 };
 

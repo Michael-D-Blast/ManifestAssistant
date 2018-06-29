@@ -43,8 +43,11 @@ void Dot::displayDependencyTree()
 {
     for (int i = 0; i < dependencyTree.size(); i++)
     {
-        qDebug() << "[" << i << "]" << " parent: " << dependencyTree.at(i).getParent().getName();
-        qDebug() << "[" << i << "]" << " child: " << dependencyTree.at(i).getChild().getName();
+        Component p = dependencyTree.at(i).getParent();
+        Component c = dependencyTree.at(i).getChild();
+
+        qDebug() << "[" << i << "]" << " parent: " << p.getName() << "@" << p.getTag();
+        qDebug() << "[" << i << "]" << " child: " << c.getName() << "@" << c.getTag();
     }
 }
 
@@ -83,7 +86,7 @@ void Dot::generateDependencyPyramid()
             for (int k = 0; k < dependencyTree.size(); k++)
             {
                 if (dependencyTree[k].getParent().getName() == dependencyPyramid[i][j].getName()) {
-                    dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild().getName());
+                    dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild());
                 }
             }
         }
@@ -210,8 +213,8 @@ void Dot::processLineOfDependencyTree(QString line)
         QString parent = line.section(' ', 0, 0);
         QString child = line.section(' ', 2, 2);
 
-        pair.setParent(parent.section('@', 0, 0), parent.section('@', 2, 2));
-        pair.setChild(child.section('@', 0, 0), child.section('@', 2, 2));
+        pair.setParent(parent.section('@', 0, 0), parent.section('@', 1, 1));
+        pair.setChild(child.section('@', 0, 0), child.section('@', 1, 1));
 
         dependencyTree << pair;
     }
