@@ -14,6 +14,8 @@ public:
 
     int clone(QString repo);
     int cloneInDir(QString repo, QString dir);
+    int checkout(QString ref);
+    int checkoutInDir(QString ref, QString dir);
 
 protected:
     void setCmd(QString cmd);

@@ -4,6 +4,7 @@
 #include <QProcess>
 #include "cmdexecutor.h"
 #include "gitexecutor.h"
+#include <QDir>
 
 Component::Component()
 {
@@ -67,10 +68,26 @@ int Component::checkoutToTag()
     // TODO: Check if the component's working directory is clean.
     // If it is, we do the checkout in current directory, otherwise, we do the checkout in a temp directory.
     // Now, we only do it in a temp directory.
+
+    // If the component repo has already existed in tmp dir, remove it first
+    // TODO: Assemble a new dir class to check if a dir exist and remove it
+
+    QDir dir(TMP_COMPONENT_DIR + "/" + name);
+    dir.removeRecursively();
+
     GitExecutor gitExecutor;
     ret = gitExecutor.cloneInDir(name, TMP_COMPONENT_DIR);
     if (ret < 0) {
         qDebug() << "Failed to git clone " << name;
+
+        return -1;
+    }
+
+    ret = gitExecutor.checkoutInDir(tag, TMP_COMPONENT_DIR + "/" + name);
+    if (ret < 0) {
+        qDebug() << "Failed to git checkout " << tag;
+
+        return -2;
     }
 
     return ret;
