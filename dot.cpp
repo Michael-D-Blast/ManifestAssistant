@@ -237,7 +237,7 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
 
         // If the tag of this component isn't same with that of this component in updated list
         if (dependencies[i].getTag() != c.getTag()) {
-            component.updateDependencyInManifest(c);
+            component.updateDependencyInManifest(dependencies[i], c);
             needUpdate = true;
         }
     }

@@ -1,5 +1,6 @@
 #include "cmdexecutor.h"
 #include "QDebug"
+#include <QByteArray>
 
 CmdExecutor::CmdExecutor()
 {
@@ -30,10 +31,17 @@ int CmdExecutor::executeCmd()
         return -1;
     }
 
-    if (!waitForFinished()) {
+	// TODO: Don't use magic number
+    if (!waitForFinished(10 * 60 * 1000)) {
         qDebug() << "Failed to finish cmd";
         return -2;
     }
+
+    QByteArray output, error;
+    output = readAllStandardOutput();
+    error = readAllStandardError();
+    qDebug() << "output: " << QString(output);
+    qDebug() << "error: " << QString(error);
 
     return 0;
 }

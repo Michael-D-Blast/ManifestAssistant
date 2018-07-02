@@ -28,7 +28,7 @@ public:
     void setTag(QString tagToBe);
     int checkoutToTag();
     void appendDependency(Component dependentComponent);
-    int updateDependencyInManifest(Component dependency);
+    int updateDependencyInManifest(Component oldDependency, Component newDependency);
     int updateBuildInManifest();
     int commitChangeOfManifest();
     int creatNewTag();

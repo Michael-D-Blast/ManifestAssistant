@@ -63,7 +63,7 @@ int Component::checkoutToTag()
 {
     int ret = 0;
 
-    qDebug() << "Dummy: checkout " << name << " to " << tag;
+    qDebug() << "Checkouting " << name << " to " << tag;
 
     // TODO: Check if the component's working directory is clean.
     // If it is, we do the checkout in current directory, otherwise, we do the checkout in a temp directory.
@@ -98,9 +98,26 @@ void Component::appendDependency(Component dependentComponent)
     dependencies << dependentComponent;
 }
 
-int Component::updateDependencyInManifest(Component dependency)
+int Component::updateDependencyInManifest(Component oldDependency, Component newDependency)
 {
-    qDebug() << "Dummy: updating " << dependency.getName() << " to " << dependency.getTag() << " in the manifest of " << name;
+    qDebug() << "Dummy: updating " << newDependency.getName() << " to " << newDependency.getTag() << " in the manifest of " << name;
+
+    QString fileName = TMP_COMPONENT_DIR + "/" + name + "/" + "repo-manifest";
+    QFile file(fileName);
+
+    if (!file.exists()) {
+        qDebug() << fileName << " doesn't exist";
+        GitExecutor gitExecutor;
+        gitExecutor.cloneInDir(name, TMP_COMPONENT_DIR);
+        gitExecutor.checkoutInDir(tag, TMP_COMPONENT_DIR + "/" + name);
+    }
+
+    // TODO: Assmeble a class to do this
+    CmdExecutor cmdExecutor;
+    QString cmd = QString("sed -i {/%1/s/%2/%3/} %4").arg(newDependency.getName()).arg(oldDependency.getTag()).arg(newDependency.getTag()).arg(fileName);
+    qDebug() << "Running " << cmd;
+    cmdExecutor.setCmd(cmd);
+    cmdExecutor.executeCmdInDir(TMP_COMPONENT_DIR + "/" + name);
 
     return 0;
 }

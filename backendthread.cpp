@@ -53,4 +53,6 @@ int BackendThread::createTmpDir()
         qDebug() << "Failed to create " << TMP_COMPONENT_DIR;
         return -2;
     }
+
+    return 0;
 }
