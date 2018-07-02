@@ -1,5 +1,6 @@
 #include "component.h"
 #include <QDebug>
+#include "dot.h"
 
 Component::Component()
 {
@@ -91,6 +92,12 @@ int Component::commitChangeOfManifest()
 int Component::creatNewTag()
 {
     qDebug() << "Dummy: creat a new tag for " << name;
+}
+
+void Component::updateTag(void)
+{
+    QString newTag = Dot::updateTag(tag);
+    tag = newTag;
 }
 
 void Component::displayDependencies() const

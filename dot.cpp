@@ -217,6 +217,7 @@ void Dot::processSingleComponent(Component componentToProcess, ComponentsList &c
             // update the tag of this component in the updating component list.
             updateComponentTagInUpdateList(componentSpecified);
         } else {
+            component.updateTag();  // Update my tag here
             componentsListNewAdded << component;
         }
     }

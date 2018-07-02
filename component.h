@@ -31,6 +31,7 @@ public:
     int updateBuildInManifest();
     int commitChangeOfManifest();
     int creatNewTag();
+    void updateTag(void);
 
 private:
     QString name;

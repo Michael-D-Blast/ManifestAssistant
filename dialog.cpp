@@ -68,8 +68,8 @@ void Dialog::on_BtnOK_clicked()
         dot.setComponentToUpdate(c);
     }
 
-    name = ui->cBoxName2->currentText();
-    tag = ui->lineEdit2->text();
+    name = ui->cBoxName3->currentText();
+    tag = ui->lineEdit3->text();
 
     // TODO: Use Rx to check tag validity
     if (name != "NULL" && !tag.isEmpty()) {
@@ -96,5 +96,27 @@ void Dialog::on_cBoxName1_currentIndexChanged(int index)
     } else {
         Component c = dot.getAllComponentsList().at(index - 1);
         ui->lineEdit1->setText(c.getTag());
+    }
+}
+
+void Dialog::on_cBoxName2_currentIndexChanged(int index)
+{
+    // The first index of combo box is NULL, so index
+    if (index == 0) {
+        ui->lineEdit2->setText("");
+    } else {
+        Component c = dot.getAllComponentsList().at(index - 1);
+        ui->lineEdit2->setText(c.getTag());
+    }
+}
+
+void Dialog::on_cBoxName3_currentIndexChanged(int index)
+{
+    // The first index of combo box is NULL, so index
+    if (index == 0) {
+        ui->lineEdit3->setText("");
+    } else {
+        Component c = dot.getAllComponentsList().at(index - 1);
+        ui->lineEdit3->setText(c.getTag());
     }
 }

@@ -29,6 +29,11 @@ private slots:
 
     void on_cBoxName1_currentIndexChanged(int index);
 
+
+    void on_cBoxName2_currentIndexChanged(int index);
+
+    void on_cBoxName3_currentIndexChanged(int index);
+
 private:
     Ui::Dialog *ui;
 
