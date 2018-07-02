@@ -11,12 +11,14 @@ public:
     ~CmdExecutor();
 
     // Set Methods
-    void setCmd(QString cmd);
+    virtual void setCmd(QString cmd);
     int executeCmd();
     int executeCmdInDir(QString dir);
 
-private:
+protected:
     QString cmd;
+
+private:
 };
 
 #endif // CMDEXECUTOR_H

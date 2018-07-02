@@ -3,6 +3,7 @@
 #include "dot.h"
 #include <QProcess>
 #include "cmdexecutor.h"
+#include "gitexecutor.h"
 
 Component::Component()
 {
@@ -66,9 +67,13 @@ int Component::checkoutToTag()
     // TODO: Check if the component's working directory is clean.
     // If it is, we do the checkout in current directory, otherwise, we do the checkout in a temp directory.
     // Now, we only do it in a temp directory.
-    CmdExecutor cmdExecutor;
-    cmdExecutor.setCmd("touch hello");
-    cmdExecutor.executeCmdInDir(TMP_COMPONENT_DIR);
+    GitExecutor gitExecutor;
+    ret = gitExecutor.cloneInDir(name, TMP_COMPONENT_DIR);
+    if (ret < 0) {
+        qDebug() << "Failed to git clone " << name;
+    }
+
+    return ret;
 }
 
 void Component::appendDependency(Component dependentComponent)

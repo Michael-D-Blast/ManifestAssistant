@@ -17,12 +17,14 @@ SOURCES += main.cpp\
     backendthread.cpp \
     dot.cpp \
     component.cpp \
-    cmdexecutor.cpp
+    cmdexecutor.cpp \
+    gitexecutor.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
     dot.h \
     component.h \
-    cmdexecutor.h
+    cmdexecutor.h \
+    gitexecutor.h
 
 FORMS    += dialog.ui
