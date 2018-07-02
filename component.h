@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QList>
+static const QString TMP_COMPONENT_DIR = "/tmp/components";
 
 typedef QList<class Component> ComponentsList;
 typedef QList<ComponentsList> ComponentsMesh;
@@ -38,7 +39,6 @@ private:
     QString tag;
 
     ComponentsList dependencies;
-
 };
 
 

@@ -17,6 +17,8 @@ protected:
 
 private:
     Dot *dot;
+
+    int createTmpDir();
 };
 
 #endif // BACKENDTHREAD_H

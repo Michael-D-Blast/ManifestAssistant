@@ -16,11 +16,13 @@ SOURCES += main.cpp\
         dialog.cpp \
     backendthread.cpp \
     dot.cpp \
-    component.cpp
+    component.cpp \
+    cmdexecutor.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
     dot.h \
-    component.h
+    component.h \
+    cmdexecutor.h
 
 FORMS    += dialog.ui

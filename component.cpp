@@ -1,6 +1,8 @@
 #include "component.h"
 #include <QDebug>
 #include "dot.h"
+#include <QProcess>
+#include "cmdexecutor.h"
 
 Component::Component()
 {
@@ -57,9 +59,16 @@ bool Component::is(Component anotherComponent)
 
 int Component::checkoutToTag()
 {
+    int ret = 0;
+
     qDebug() << "Dummy: checkout " << name << " to " << tag;
 
-    return 0;
+    // TODO: Check if the component's working directory is clean.
+    // If it is, we do the checkout in current directory, otherwise, we do the checkout in a temp directory.
+    // Now, we only do it in a temp directory.
+    CmdExecutor cmdExecutor;
+    cmdExecutor.setCmd("touch hello");
+    cmdExecutor.executeCmdInDir(TMP_COMPONENT_DIR);
 }
 
 void Component::appendDependency(Component dependentComponent)
