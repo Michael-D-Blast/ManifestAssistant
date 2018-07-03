@@ -184,7 +184,12 @@ void Dot::updateLocalManifests()
 
         for (int j = 0; j < dependencyPyramid[i].size(); j++)
         {
-            processSingleComponent(dependencyPyramid[i][j], tmpComponentsList);
+            try {
+                processSingleComponent(dependencyPyramid[i][j], tmpComponentsList);
+            }
+            catch (MyError e) {
+                throw;
+            }
         }
 
         componentsToUpdate += tmpComponentsList;
@@ -210,7 +215,12 @@ void Dot::processSingleComponent(Component componentToProcess, ComponentsList &c
 
     // It's not allowed to use the tag info in this method because we pass component.
     // TODO: remove the restrict
-    needUpdate = updateSingleManifestIfNeeded(component);
+    try {
+        needUpdate = updateSingleManifestIfNeeded(component);
+    }
+    catch (MyError e) {
+        throw;
+    }
 
     if (needUpdate) {
         if (alreadySpecified) {
@@ -238,7 +248,11 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
 
         // If the tag of this component isn't same with that of this component in updated list
         if (dependencies[i].getTag() != c.getTag()) {
-            component.updateDependencyInManifest(dependencies[i], c);
+            int ret;
+            ret = component.updateDependencyInManifest(dependencies[i], c);
+            if (ret != 0) {
+                throw MyError(ret, "updateDependencyInManifest error", __LINE__, __FUNCTION__);
+            }
             needUpdate = true;
         }
     }

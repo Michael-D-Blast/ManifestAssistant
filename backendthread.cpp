@@ -1,6 +1,7 @@
 #include "backendthread.h"
 #include <QDebug>
 #include <QDir>
+#include "myerror.h"
 
 BackendThread::BackendThread()
 {
@@ -22,7 +23,12 @@ void BackendThread::run()
         qDebug() << "Failed to create tmp dir in thread";
     }
 
-    dot->updateLocalManifests();
+    try {
+        dot->updateLocalManifests();
+    }
+    catch (MyError e) {
+        e.displayError();
+    }
 }
 
 int BackendThread::createTmpDir()
