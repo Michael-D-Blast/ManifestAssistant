@@ -7,7 +7,7 @@
 #include <QDir>
 #include "manifesteditor.h"
 
-#define DO_DUMMY_PROCESS
+//#define DO_DUMMY_PROCESS
 
 Component::Component()
 {
@@ -139,14 +139,15 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
     return 0;
 }
 
-// As component here is the one in dependencyPyramid, if this component is one of which need to be updated,
-// its tag may be different from the one at which it is because we had checked out to the tag given by user.
-// It'll be dangerous to use the tag.
-int Component::updateBuildInManifest()
+QString Component::updateBuildInManifest()
 {
     // Update BUILD in current manifest
 
-    // Check if the current tag is
+    // Check if the tag hold by this object is same with the one in repo-manifest
+    ManifestEditor manifest(TMP_COMPONENT_DIR, name);
+    QString currentBuild = manifest.getBuildInManifest();
+
+    qDebug() << "Current BUILD is " << currentBuild;
 
     return 0;
 }

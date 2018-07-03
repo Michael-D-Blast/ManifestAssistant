@@ -2,6 +2,8 @@
 #include "cmdexecutor.h"
 #include <QDebug>
 #include <QFileInfo>
+#include <QFile>
+#include "myerror.h"
 
 FileEditor::FileEditor()
 {
@@ -16,6 +18,34 @@ FileEditor::FileEditor(QString file)
 FileEditor::~FileEditor()
 {
 
+}
+
+QString FileEditor::getValueOfKey(QString key, QChar sep) const
+{
+    QString value = "";
+
+    QFile f(file);
+    if(!f.open(QIODevice::ReadOnly)) {
+        throw MyError(-1, "Failed to open " + file, __LINE__, __FUNCTION__);
+    }
+
+    QTextStream s(&f);
+    QString line;
+    while(!s.atEnd()) {
+        line = s.readLine();
+        if (line.contains(key)) {
+
+            qDebug() << "Find " << line;
+
+            line.remove(" ");
+            value = line.section(sep, 1, 1);
+            break;
+        }
+    }
+
+    f.close();
+
+    return value;   // If key isn't found, return an empty string
 }
 
 int FileEditor::updateValueInLinesContainingKeyword(const QString &oldValue, const QString &newValue, const QString &keyword)

@@ -35,6 +35,8 @@ bool Dot::parseDependencyTree()
         processLineOfDependencyTree(line);
     }
 
+    dotFile.close();
+
     displayDependencyTree();
 
     return true;
@@ -231,7 +233,6 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
 
 }
 
-// It's not allowed to use the tag info in this method !!!
 bool Dot::updateSingleManifestIfNeeded(Component component)
 {
     bool needUpdate = false;
@@ -254,7 +255,7 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
     }
 
     if (needUpdate) {
-        component.updateBuildInManifest();      // component is the one in dependencyParamid.
+        component.updateBuildInManifest();
         component.commitChangeOfManifest();
         component.creatNewTag();
     }

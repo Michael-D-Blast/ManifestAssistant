@@ -25,13 +25,22 @@ public:
 
     // Set Methods
     void setName(QString nameToBe);
+
     void setTag(QString tagToBe);
+
     int checkoutToTag();
+
     void appendDependency(Component dependentComponent);
+
     int updateDependencyInManifest(Component oldDependency, Component newDependency);
-    int updateBuildInManifest();
+
+    // Return new BUILD in QString
+    QString updateBuildInManifest();
+
     int commitChangeOfManifest();
+
     int creatNewTag();
+
     void updateTag(void);
 
 private:
