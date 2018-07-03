@@ -18,13 +18,19 @@ SOURCES += main.cpp\
     dot.cpp \
     component.cpp \
     cmdexecutor.cpp \
-    gitexecutor.cpp
+    gitexecutor.cpp \
+    fileeditor.cpp \
+    manifesteditor.cpp \
+    myerror.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
     dot.h \
     component.h \
     cmdexecutor.h \
-    gitexecutor.h
+    gitexecutor.h \
+    fileeditor.h \
+    manifesteditor.h \
+    myerror.h
 
 FORMS    += dialog.ui

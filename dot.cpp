@@ -2,6 +2,7 @@
 #include "QDebug"
 #include <QIODevice>
 #include <QByteArray>
+#include "myerror.h"
 
 Dot::Dot()
 {

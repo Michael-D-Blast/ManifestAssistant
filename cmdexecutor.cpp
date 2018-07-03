@@ -37,13 +37,14 @@ int CmdExecutor::executeCmd()
         return -2;
     }
 
-    QByteArray output, error;
-    output = readAllStandardOutput();
-    error = readAllStandardError();
-    qDebug() << "output: " << QString(output);
-    qDebug() << "error: " << QString(error);
+    int ret = exitCode();
+    if (ret != 0) {
+        qDebug() << "Standard error: " << QString(readAllStandardError());
+    }
 
-    return 0;
+    qDebug() << "Standard output: " << QString(readAllStandardOutput());
+
+    return ret;
 }
 
 int CmdExecutor::executeCmdInDir(QString dir)

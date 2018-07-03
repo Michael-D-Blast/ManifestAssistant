@@ -5,6 +5,7 @@
 #include "cmdexecutor.h"
 #include "gitexecutor.h"
 #include <QDir>
+#include "manifesteditor.h"
 
 Component::Component()
 {
@@ -100,7 +101,9 @@ void Component::appendDependency(Component dependentComponent)
 
 int Component::updateDependencyInManifest(Component oldDependency, Component newDependency)
 {
-    qDebug() << "Dummy: updating " << newDependency.getName() << " to " << newDependency.getTag() << " in the manifest of " << name;
+    QString dependency = oldDependency.getName();
+    QString oldTag = oldDependency.getTag();
+    QString newTag = newDependency.getTag();
 
     QString fileName = TMP_COMPONENT_DIR + "/" + name + "/" + "repo-manifest";
     QFile file(fileName);
@@ -112,12 +115,14 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
         gitExecutor.checkoutInDir(tag, TMP_COMPONENT_DIR + "/" + name);
     }
 
-    // TODO: Assmeble a class to do this
-    CmdExecutor cmdExecutor;
-    QString cmd = QString("sed -i {/%1/s/%2/%3/} %4").arg(newDependency.getName()).arg(oldDependency.getTag()).arg(newDependency.getTag()).arg(fileName);
-    qDebug() << "Running " << cmd;
-    cmdExecutor.setCmd(cmd);
-    cmdExecutor.executeCmdInDir(TMP_COMPONENT_DIR + "/" + name);
+    // Update the dependency's tag in repo-manifest
+    ManifestEditor manifest(TMP_COMPONENT_DIR, name);
+    int ret;
+
+    if ((ret = manifest.updateDependencyTag(oldTag, newTag, dependency)) < 0) {
+        qDebug() << "Failed to update the tag of " << dependency << " from " << oldTag << " to" << newTag << " in the manifest of " << name;
+        return -1;
+    }
 
     return 0;
 }
