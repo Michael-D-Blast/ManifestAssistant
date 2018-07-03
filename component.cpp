@@ -7,7 +7,7 @@
 #include <QDir>
 #include "manifesteditor.h"
 
-//#define DO_DUMMY_PROCESS
+#define DO_DUMMY_PROCESS
 
 Component::Component()
 {

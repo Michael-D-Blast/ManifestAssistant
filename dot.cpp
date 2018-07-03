@@ -196,10 +196,8 @@ void Dot::updateLocalManifests()
     }
 }
 
-void Dot::processSingleComponent(Component componentToProcess, ComponentsList &componentsListNewAdded)
+void Dot::processSingleComponent(Component component, ComponentsList &componentsListNewAdded)
 {
-    Component component = componentToProcess;
-    // componentSpecified doesn't have dependencies !!!
     Component componentSpecified = componentSpecifiedTo(component);
 
     // alreadySpecified means this component has been specified to be updated by user
@@ -213,10 +211,8 @@ void Dot::processSingleComponent(Component componentToProcess, ComponentsList &c
 
     bool needUpdate;
 
-    // It's not allowed to use the tag info in this method because we pass component.
-    // TODO: remove the restrict
     try {
-        needUpdate = updateSingleManifestIfNeeded(component);
+        needUpdate = updateSingleManifestIfNeeded(componentSpecified);
     }
     catch (MyError e) {
         throw;
