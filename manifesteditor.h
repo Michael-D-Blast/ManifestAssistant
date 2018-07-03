@@ -11,6 +11,7 @@ public:
 
     // Set Methods
     int updateDependencyTag(const QString &oldTag, const QString &newTag, const QString &dependency);
+    int updateBuild();
 
 private:
 

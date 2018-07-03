@@ -6,7 +6,7 @@ ManifestEditor::ManifestEditor()
 }
 
 ManifestEditor::ManifestEditor(QString workdir, QString component) :
-    FileEditor(workdir + component + "/repo-manifest")
+    FileEditor(workdir + "/" + component + "/repo-manifest")
 {
 
 }
@@ -14,4 +14,9 @@ ManifestEditor::ManifestEditor(QString workdir, QString component) :
 int ManifestEditor::updateDependencyTag(const QString &oldTag, const QString &newTag, const QString &dependency)
 {
     return (updateValueInLinesContainingKeyword(oldTag, newTag, dependency));
+}
+
+int ManifestEditor::updateBuild()
+{
+
 }

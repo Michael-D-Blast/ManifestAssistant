@@ -69,7 +69,7 @@ private:
     // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
     bool updateSingleManifestIfNeeded(Component component);
     // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
-    Component componentSpecifiedTo(Component componentToCheck);
+    Component componentSpecifiedTo(Component component);
 
     // Set Methods
     void updateComponentTagInUpdateList(Component component);

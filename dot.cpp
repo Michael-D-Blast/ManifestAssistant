@@ -228,7 +228,7 @@ void Dot::processSingleComponent(Component componentToProcess, ComponentsList &c
             // update the tag of this component in the updating component list.
             updateComponentTagInUpdateList(componentSpecified);
         } else {
-            component.updateTag();  // Update my tag here
+            component.updateTag();  // Update my tag here. component is a local variable, so it doesn't affect the one in dependencyPyramid.
             componentsListNewAdded << component;
         }
     }
@@ -258,7 +258,7 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
     }
 
     if (needUpdate) {
-        component.updateBuildInManifest();
+        component.updateBuildInManifest();      // component is the one in dependencyParamid.
         component.commitChangeOfManifest();
         component.creatNewTag();
     }
@@ -266,19 +266,20 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
     return needUpdate;
 }
 
-Component Dot::componentSpecifiedTo(Component componentToCheck)
+Component Dot::componentSpecifiedTo(Component component)
 {
-    Component c = componentToCheck;
-
     for (int i = 0; i < componentsToUpdate.size(); i++)
     {
-        if (c.getName() == componentsToUpdate[i].getName()) {
-            qDebug() << c.getName() << " needs to be updated";
-            return componentsToUpdate[i];
+        if (component.getName() == componentsToUpdate[i].getName()) {   // If this component is in the update list
+            QString newTag = componentsToUpdate[i].getTag();
+            qDebug() << component.getName() << " is specified to " << newTag << " in update list";
+
+            component.setTag(newTag);   // Change its tag, so the caller will get a component with both new tag and dependencies. component is a local variable, so it's safe to change its tag here.
+            break;
         }
     }
 
-    return c;
+    return component;
 }
 
 void Dot::processLineOfDependencyTree(QString line)

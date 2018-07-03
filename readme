@@ -1,0 +1,3 @@
+1. 默认情况下, 只有 ManifestAssistant 这个工具才能修改 repo-manifest 中的依赖关系
+2. 开发者可以修改 repo-manifest 中的 BUILD
+3. tag 号仅应该由 repo-manifest 中的 VERSION 和 BUILD 来生成, 即 tag 与 VERSION 和 BUILD 有着一一对应的关系

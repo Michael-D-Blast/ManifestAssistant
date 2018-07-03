@@ -7,6 +7,8 @@
 #include <QDir>
 #include "manifesteditor.h"
 
+//#define DO_DUMMY_PROCESS
+
 Component::Component()
 {
 
@@ -62,6 +64,11 @@ bool Component::is(Component anotherComponent)
 
 int Component::checkoutToTag()
 {
+#ifdef DO_DUMMY_PROCESS
+    qDebug() << "Checkouting " << name << " to " << tag;
+
+    return 0;
+#endif
     int ret = 0;
 
     qDebug() << "Checkouting " << name << " to " << tag;
@@ -101,6 +108,11 @@ void Component::appendDependency(Component dependentComponent)
 
 int Component::updateDependencyInManifest(Component oldDependency, Component newDependency)
 {
+#ifdef DO_DUMMY_PROCESS
+    qDebug() << "In manifest of " << name << ", update " << oldDependency.getName() << " from " << oldDependency.getTag() << " to " << newDependency.getTag();
+
+    return 0;
+#endif
     QString dependency = oldDependency.getName();
     QString oldTag = oldDependency.getTag();
     QString newTag = newDependency.getTag();
@@ -127,10 +139,14 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
     return 0;
 }
 
-// It's not allowed to use the tag in this method;
+// As component here is the one in dependencyPyramid, if this component is one of which need to be updated,
+// its tag may be different from the one at which it is because we had checked out to the tag given by user.
+// It'll be dangerous to use the tag.
 int Component::updateBuildInManifest()
 {
-    qDebug() << "Dummy: updating the tag of " << name;
+    // Update BUILD in current manifest
+
+    // Check if the current tag is
 
     return 0;
 }
