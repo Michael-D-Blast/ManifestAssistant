@@ -12,11 +12,10 @@ public:
     // Get Methods
     // Return the BUILD in repo-manifest
     QString getBuildInManifest() const;
+    QString getVersionInManifest() const;
 
     // Set Methods
     int updateDependencyTag(const QString &oldTag, const QString &newTag, const QString &dependency);
-
-    int updateBuild();
 
 private:
 

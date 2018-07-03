@@ -3,6 +3,11 @@
 #include <QIODevice>
 #include <QByteArray>
 #include "myerror.h"
+#include "gitexecutor.h"
+#include <QStringList>
+
+// TODO: Select the workspace dir in a dialog
+static const QString WORKSPACE_DIR = "/home/bsp/mtws/";
 
 Dot::Dot()
 {
@@ -80,18 +85,25 @@ void Dot::generateDependencyPyramid()
         removeChildIfInUpperLevel(currentPair, currentLevel);
     }
 
-    // Add dependencies for each component
+    // Add dependencies and branches for each component
     // TODO: Optimize the algorithm
     for (int i = 0; i < dependencyPyramid.size(); i++)
     {
         for (int j = 0; j < dependencyPyramid[i].size(); j++)
         {
+            // Add dependencies
             for (int k = 0; k < dependencyTree.size(); k++)
             {
                 if (dependencyTree[k].getParent().getName() == dependencyPyramid[i][j].getName()) {
                     dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild());
                 }
             }
+#if 0   // I intended to get the branches information to let user select branch in combo box, but it's a waste of time of download all the repos if they don't exist
+            // Add branches
+            GitExecutor gitExecutor;
+            QStringList branches = gitExecutor.getBranchesInDir(WORKSPACE_DIR + "/" + dependencyPyramid[i][j].getName());
+            dependencyPyramid[i][j].setBranches(branches);
+#endif
         }
     }
 }
@@ -255,7 +267,6 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
     }
 
     if (needUpdate) {
-        component.updateBuildInManifest();
         component.commitChangeOfManifest();
         component.creatNewTag();
     }

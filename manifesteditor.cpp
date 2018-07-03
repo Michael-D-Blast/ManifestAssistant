@@ -27,12 +27,22 @@ QString ManifestEditor::getBuildInManifest() const
     return build;
 }
 
+QString ManifestEditor::getVersionInManifest() const
+{
+    QString version = "";
+
+    try {
+        version = getValueOfKey("VERSION", '=');
+    }
+    catch (MyError e) {
+        throw;
+    }
+
+    return version;
+}
+
 int ManifestEditor::updateDependencyTag(const QString &oldTag, const QString &newTag, const QString &dependency)
 {
     return (updateValueInLinesContainingKeyword(oldTag, newTag, dependency));
 }
 
-int ManifestEditor::updateBuild()
-{
-
-}

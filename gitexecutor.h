@@ -12,6 +12,11 @@ public:
     GitExecutor(QString gitRepoAddress);
     ~GitExecutor();
 
+    // Get Methods
+    QStringList getBranches();
+    QStringList getBranchesInDir(QString dir);
+
+    // Set Methods
     int clone(QString repo);
     int cloneInDir(QString repo, QString dir);
     int checkout(QString ref);

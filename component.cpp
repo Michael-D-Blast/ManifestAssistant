@@ -32,14 +32,19 @@ Component::~Component()
 
 }
 
-void Component::setName(QString nameToBe)
+void Component::setName(QString name)
 {
-    name = nameToBe;
+    this->name = name;
 }
 
-void Component::setTag(QString tagToBe)
+void Component::setTag(QString tag)
 {
-    tag = tagToBe;
+    this->tag = tag;
+}
+
+void Component::setBranches(QStringList branches)
+{
+    this->branches = branches;
 }
 
 QString Component::getName() const
@@ -141,21 +146,37 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
 
 QString Component::updateBuildInManifest()
 {
+    // I thought the tag is VERSION.BUILD, but in fact, BUILD is always 0. So we don't update it in manifest.
+#if 0
+    QString newBuild = "";
     // Update BUILD in current manifest
 
     // Check if the tag hold by this object is same with the one in repo-manifest
     ManifestEditor manifest(TMP_COMPONENT_DIR, name);
     QString currentBuild = manifest.getBuildInManifest();
+    QString tagInManifest = manifest.getVersionInManifest() + "." + currentBuild;
+
+    if (tag != tagInManifest && tag != "master") {  // If VERSION.BUILD is different from the tag we hold and we aren't in tag
+        qDebug() << "Current tag is " << tag << ", but tag in manifest is " << tagInManifest;
+    }
 
     qDebug() << "Current BUILD is " << currentBuild;
 
-    return 0;
+    return newBuild;
+#endif
 }
 
 // It's not allowed to use the tag in this method;
 int Component::commitChangeOfManifest()
 {
+#ifdef DO_DUMMY_PROCESS
     qDebug() << "Dummy: commit change of manifest";
+
+    return 0;
+#endif
+    // Git checkout to the specified branch
+
+    // Git commit
 }
 
 // It's not allowed to use the tag in this method;

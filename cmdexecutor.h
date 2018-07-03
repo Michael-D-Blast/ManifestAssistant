@@ -2,6 +2,7 @@
 #define CMDEXECUTOR_H
 
 #include <QProcess>
+#include <QStringList>
 
 class CmdExecutor : public QProcess
 {
@@ -14,6 +15,8 @@ public:
     virtual void setCmd(QString cmd);
     int executeCmd();
     int executeCmdInDir(QString dir);
+
+    QStringList executeCmdAndReturnOutput();
 
 protected:
     QString cmd;

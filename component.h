@@ -24,9 +24,11 @@ public:
     void displayDependencies() const;
 
     // Set Methods
-    void setName(QString nameToBe);
+    void setName(QString name);
 
-    void setTag(QString tagToBe);
+    void setTag(QString tag);
+
+    void setBranches(QStringList branches);
 
     int checkoutToTag();
 
@@ -46,6 +48,8 @@ public:
 private:
     QString name;
     QString tag;
+    QStringList branches;   // All branches this component has, obsolete
+    QString branchToCommit; // The branch we want to commit
 
     ComponentsList dependencies;
 };
