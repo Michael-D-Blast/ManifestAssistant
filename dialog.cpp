@@ -90,7 +90,7 @@ void Dialog::oKClicked()
         name = c.name->currentText();
         if (name != "NONE") {
             branch = c.branch->text();
-            tag = c.branch->text();
+            tag = c.tag->text();
             Component component(name, tag);
             component.setBranchToCommit(branch);
 

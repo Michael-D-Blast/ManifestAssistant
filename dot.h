@@ -35,6 +35,7 @@ public:
     void displayDependencyTree();
     void displayDependencyPyramid() const;
     ComponentsList getAllComponentsList();
+
     void displayComponentsToUpdate() const;
 
     // Set Methods
