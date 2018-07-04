@@ -1,81 +1,86 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-
-// TODO: Add components dynamically
-#define COMPONENTS_MAX_NUM 3
+#include <QDebug>
 
 Dialog::Dialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Dialog)
+    QDialog(parent)
 {
-    ui->setupUi(this);
+    // TODO: Make a nicer UI
+    gridLayout = new QGridLayout(this);
+    label = new QLabel(this);
+    label->setText("Please select the components you'd like to update and specify the branch and tag you'd like to update to.");
+    gridLayout->addWidget(label, 0, 0, 1, 5);
+
+
+    for (int i = 0; i < COMPONENTS_MAX_NUM; i++) {
+        componentInputters[i].name =  new QComboBox(this);
+        componentInputters[i].branch = new QLineEdit(this);
+        componentInputters[i].tag = new TagLineEdit(&components, this);
+
+        gridLayout->addWidget(componentInputters[i].name, 3+i, 1, 1, 1);
+        gridLayout->addWidget(componentInputters[i].branch, 3+i, 2, 1, 1);
+        gridLayout->addWidget(componentInputters[i].tag, 3+i, 3, 1, 1);
+
+        connect(componentInputters[i].name, SIGNAL(currentIndexChanged(int)), componentInputters[i].tag, SLOT(componentChanged(int)));
+//        connect(componentInputters[i].name, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxNIndexChanged()));
+    }
+
+    ok = new QPushButton(this);
+    ok->setText("OK");
+    gridLayout->addWidget(ok, 3+COMPONENTS_MAX_NUM, 2, 1, 1, Qt::AlignCenter | Qt::AlignVCenter);
+    connect(ok, SIGNAL(clicked()), this, SLOT(oKClicked()));
+
+    setLayout(gridLayout);
 }
 
 Dialog::~Dialog()
 {
-    delete ui;
+    delete gridLayout;
+    delete label;
+    delete ok;
+
+    for (int i = 0; i < COMPONENTS_MAX_NUM; i++) {
+        delete componentInputters[i].name;
+        delete componentInputters[i].branch;
+        delete componentInputters[i].tag;
+    }
 }
 
 // TODO: Change the implementation, create combo boxes dynamically
+
 void Dialog::setComboxItems()
 {
-    ComponentsList allComponents = dot.getAllComponentsList();
+    // Get the items
 
-    ui->cBoxName1->addItem("NULL");
-    ui->cBoxName2->addItem("NULL");
-    ui->cBoxName3->addItem("NULL");
+    components = dot.getAllComponentsList();
 
-    for (int i = 0; i < allComponents.size(); i++)
-    {
-        ui->cBoxName1->addItem(allComponents[i].getName());
-        ui->cBoxName2->addItem(allComponents[i].getName());
-        ui->cBoxName3->addItem(allComponents[i].getName());
+    for (int i = 0; i < COMPONENTS_MAX_NUM; i++) {
+
+        // Set items for each combo box
+
+        componentInputters[i].name->addItem("NONE");
+
+        for (int c = 0; c < components.size(); c++) {
+            componentInputters[i].name->addItem(components[c].getName());
+        }
     }
+}
 
-    ui->cBoxBranch1->addItem("NULL");
-    ui->cBoxBranch2->addItem("NULL");
-    ui->cBoxBranch3->addItem("NULL");
-
-//    for (int i = 0; i < allComponents.size(); i++)
-//    {
-//        ui->cBoxBranch1->addItem(allComponents[i].getName());
-//        ui->cBoxBranch2->addItem(allComponents[i].getName());
-//        ui->cBoxBranch3->addItem(allComponents[i].getName());
-//    }
+void Dialog::comboBoxNIndexChanged()
+{
+    qDebug() << "index is ";
 }
 
 
-void Dialog::on_BtnOK_clicked()
+void Dialog::oKClicked()
 {
     QString name;
     QString tag;
 
-    name = ui->cBoxName1->currentText();
-    tag = ui->lineEdit1->text();
+//    name = ui->cBoxName1->currentText();
+//    tag = ui->lineEdit1->text();
 
-    // TODO: Use Rx to check tag validity
-    if (name != "NULL" && !tag.isEmpty()) {
-        Component c(name, tag);
-        dot.setComponentToUpdate(c);
-    }
 
-    name = ui->cBoxName2->currentText();
-    tag = ui->lineEdit2->text();
-
-    // TODO: Use Rx to check tag validity
-    if (name != "NULL" && !tag.isEmpty()) {
-        Component c(name, tag);
-        dot.setComponentToUpdate(c);
-    }
-
-    name = ui->cBoxName3->currentText();
-    tag = ui->lineEdit3->text();
-
-    // TODO: Use Rx to check tag validity
-    if (name != "NULL" && !tag.isEmpty()) {
-        Component c(name, tag);
-        dot.setComponentToUpdate(c);
-    }
 
     dot.displayComponentsToUpdate();
 
@@ -83,11 +88,11 @@ void Dialog::on_BtnOK_clicked()
 
     backendThread.start();
 
-    ui->BtnOK->setEnabled(false);
+    ok->setEnabled(false);
 }
 
 
-
+#if 0
 void Dialog::on_cBoxName1_currentIndexChanged(int index)
 {
     // The first index of combo box is NULL, so index
@@ -120,3 +125,4 @@ void Dialog::on_cBoxName3_currentIndexChanged(int index)
         ui->lineEdit3->setText(c.getTag());
     }
 }
+#endif

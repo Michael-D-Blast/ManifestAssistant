@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     gitexecutor.cpp \
     fileeditor.cpp \
     manifesteditor.cpp \
-    myerror.cpp
+    myerror.cpp \
+    taglineedit.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
@@ -31,6 +32,7 @@ HEADERS  += dialog.h \
     gitexecutor.h \
     fileeditor.h \
     manifesteditor.h \
-    myerror.h
+    myerror.h \
+    taglineedit.h
 
-FORMS    += dialog.ui
+FORMS    +=

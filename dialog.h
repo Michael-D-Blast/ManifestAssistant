@@ -4,11 +4,16 @@
 #include <QDialog>
 #include "backendthread.h"
 #include "dot.h"
+#include <QGridLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QComboBox>
+#include <QLineEdit>
+#include "component.h"
+#include "taglineedit.h"
 
-
-namespace Ui {
-class Dialog;
-}
+// TODO: Add components dynamically
+#define COMPONENTS_MAX_NUM 10
 
 class Dialog : public QDialog
 {
@@ -23,21 +28,25 @@ public:
     Dot dot;
 
 private slots:
-
-    void on_BtnOK_clicked();
-
-
-    void on_cBoxName1_currentIndexChanged(int index);
-
-
-    void on_cBoxName2_currentIndexChanged(int index);
-
-    void on_cBoxName3_currentIndexChanged(int index);
+    void comboBoxNIndexChanged();
+    void oKClicked();
 
 private:
-    Ui::Dialog *ui;
+    struct ComponentInputter {
+        QComboBox *name;
+        QLineEdit *branch;
+        TagLineEdit *tag;
+    };
+
+    QGridLayout *gridLayout;
+    QLabel *label;
+    QPushButton *ok;
+    struct ComponentInputter componentInputters[COMPONENTS_MAX_NUM];
 
     BackendThread backendThread;
+
+    // TODO: After Refactoring the class Component, choose a more appropriate type hold as less information as possible.
+    ComponentsList components;      // Store the components information, get them from dot.
 };
 
 #endif // DIALOG_H
