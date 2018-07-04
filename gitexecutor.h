@@ -15,12 +15,16 @@ public:
     // Get Methods
     QStringList getBranches();
     QStringList getBranchesInDir(QString dir);
+    QString getCurrentBranch();
+    QString getCurrentBranchInDir(QString dir);
 
     // Set Methods
     int clone(QString repo);
     int cloneInDir(QString repo, QString dir);
     int checkout(QString ref);
     int checkoutInDir(QString ref, QString dir);
+    int commit(QString commitMessage);
+    int commitInDir(QString commitMessage, QString dir);
 
 protected:
     void setCmd(QString cmd);

@@ -1,3 +1,11 @@
+2018/07/04:
+1. [Reason] 当某个父组件要commit repo-manifest的时候, 它需要知道commit到哪个分支.
+            但由于哪个父组件需升级这个信息在一开始是不知道的, 所以只能中途用对话框让用户来输入.
+            但是在非GUI线程里, 无法使用对话框, 只能让 dot 类发送一个信号给 dialog, 然后 dialog 通过对话框获取 branch, 同时 backendThread 处于等待状态.
+
+2. [REASON] Esmeralda 会被切换到 master 分支, 但实际上 Esmeralda 如果在其它分支时, 执行了 repo select, 它的 dot 里还是 master, 所以此时以 master就不准了, 所以对于 Esmeralda 要区别对待才行
+
 2018/07/03:
 1. [Reason] 如果一个组件是pkg包,且我们没有源码,那么这个组件我们处理不了.在 git clone 的时候会失败,判断一下失败原因,如果是因为没有源码,那么在这个时候给出提示
    [Change] 增加功能:在git clone仓库的地方判断失败原因,给出失败提示
+

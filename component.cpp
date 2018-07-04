@@ -6,6 +6,7 @@
 #include "gitexecutor.h"
 #include <QDir>
 #include "manifesteditor.h"
+#include "branchdialog.h"
 
 //#define DO_DUMMY_PROCESS
 
@@ -184,11 +185,22 @@ int Component::commitChangeOfManifest()
     return 0;
 #endif
     // Git checkout to the specified branch
-    if (branchToCommit.isEmpty()) {
-
+    int ret;
+    GitExecutor gitExecutor;
+    ret = gitExecutor.checkoutInDir(branchToCommit, TMP_COMPONENT_DIR + "/" + name);
+    if (ret != 0) {
+        qDebug() << "Failed to checkout to branch " << branchToCommit;
+        return ret;
     }
 
     // Git commit
+    ret = gitExecutor.commitInDir("Test commit", TMP_COMPONENT_DIR + "/" + name);
+    if (ret != 0) {
+        qDebug() << "Failed to commit to branch " << branchToCommit;
+        return ret;
+    }
+
+    return 0;
 }
 
 // It's not allowed to use the tag in this method;

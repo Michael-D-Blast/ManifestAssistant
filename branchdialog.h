@@ -15,7 +15,7 @@ class BranchDialog : public QDialog
     Q_OBJECT
 
 public:
-    BranchDialog(QWidget *parent = 0);
+    BranchDialog(QString component, QWidget *parent = 0);
     ~BranchDialog();
 
     QString getBranch() const;
@@ -26,6 +26,9 @@ private slots:
 private:
     QVBoxLayout *vLayout;
     QLabel *instruction;
+
+    // TODO: Use a combo box display all the branches that this component has
+
     QLineEdit *lineedit;
     QPushButton *ok;
 

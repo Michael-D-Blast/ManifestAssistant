@@ -29,10 +29,14 @@ public:
 
 private slots:
     void oKClicked();
+    void responseBranchDialog();
 
 private:
     struct ComponentInputter {
         QComboBox *name;
+
+        // TODO: Actually, we don't need the branch here, because user don't need to specify branch here
+
         QLineEdit *branch;
         TagLineEdit *tag;
     };

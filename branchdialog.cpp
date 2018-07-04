@@ -2,7 +2,7 @@
 #include <QMessageBox>
 #include <QDebug>
 
-BranchDialog::BranchDialog(QWidget *parent) :
+BranchDialog::BranchDialog(QString component, QWidget *parent) :
     QDialog(parent)
 {
     vLayout = new QVBoxLayout(this);
@@ -12,7 +12,7 @@ BranchDialog::BranchDialog(QWidget *parent) :
 
     branch = "";
 
-    instruction->setText("Please specify to which branch to commit");
+    instruction->setText("Please specify to which branch to commit for " + component);
 
     ok->setText("OK");
 

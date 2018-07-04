@@ -5,6 +5,9 @@
 #include <QFile>
 #include <QByteArray>
 #include "component.h"
+#include <QMutex>
+#include <QMutexLocker>
+#include <QObject>
 
 
 class DependencyPair {
@@ -23,11 +26,18 @@ private:
 
 };
 
-class Dot
+class Dot : public QObject
 {
+    Q_OBJECT
+
 public:
+    // TODO: Find a better way to remove these variables
+    QString componentNeedsBranch;   // We use it to give component name to branch dialog
+    QString branchInputInDialog;    // We use it to give branch got from dialog to backend thread
+
+    QString workingDir;     // The working dir
+
     Dot();
-    Dot(QString dotFileName);   // absolete, use setFile
 
     // Get Methods
     void setFile(QString file);
@@ -50,6 +60,9 @@ public:
     // Add a component into the component list to be udpated
     virtual void setComponentToUpdate(Component componentToUpdate);
 
+signals:
+    void requestBranchDialog();
+
 private:
     QFile dotFile;
     // Pair information read from .dot file
@@ -58,7 +71,7 @@ private:
     ComponentsMesh dependencyPyramid;
     ComponentsList componentsToUpdate;
     ComponentsList allComponentsList;   // used for items in combox
-
+    QString rootComponent;      // The entry component of the product, default is Esmeralda
 
     void processLineOfDependencyTree(QString line);
     void insertPairChildToPyramidLevel(int pairIndex, int level);

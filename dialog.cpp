@@ -2,6 +2,10 @@
 #include "ui_dialog.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QWaitCondition>
+#include "branchdialog.h"
+
+extern QWaitCondition waitCondition;
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent)
@@ -34,7 +38,6 @@ Dialog::Dialog(QWidget *parent) :
         gridLayout->addWidget(componentInputters[i].tag, 3+i, 3, 1, 1);
 
         connect(componentInputters[i].name, SIGNAL(currentIndexChanged(int)), componentInputters[i].tag, SLOT(componentChanged(int)));
-//        connect(componentInputters[i].name, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxNIndexChanged()));
     }
 
     ok = new QPushButton(this);
@@ -43,6 +46,8 @@ Dialog::Dialog(QWidget *parent) :
     connect(ok, SIGNAL(clicked()), this, SLOT(oKClicked()));
 
     setLayout(gridLayout);
+
+    connect(&dot, SIGNAL(requestBranchDialog()), this, SLOT(responseBranchDialog()));
 }
 
 Dialog::~Dialog()
@@ -118,13 +123,22 @@ void Dialog::oKClicked()
     ok->setEnabled(false);
 }
 
+void Dialog::responseBranchDialog()
+{
+    qDebug() << "responseBranchDialog";
+
+    BranchDialog dlg(dot.componentNeedsBranch, this);
+    dlg.exec();
+
+    dot.branchInputInDialog = dlg.getBranch();
+
+    waitCondition.wakeAll();
+}
+
 bool Dialog::componentInputIsValid(Component component)
 {
     QString branchToCommit = component.getBranchToCommit();
     QString tag = component.getTag();
-
-    if (branchToCommit.isEmpty())
-        return false;
 
     if (tag.isEmpty())
         return false;

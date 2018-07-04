@@ -2,6 +2,12 @@
 #include <QDebug>
 #include <QDir>
 #include "myerror.h"
+#include <QMutex>
+#include <QMutexLocker>
+#include <QWaitCondition>
+
+extern QWaitCondition waitCondition;
+extern QMutex complete;
 
 BackendThread::BackendThread()
 {
@@ -18,6 +24,17 @@ void BackendThread::run()
     int ret;
 
     qDebug() << "Run backend thread";
+
+#if 0   // test
+    complete.lock();
+    qDebug() << "Before wait";
+    emit dot->requestBranchDialog();
+    waitCondition.wait(&complete);
+    qDebug() << "After wait";
+    complete.unlock();
+
+    return;
+#endif
 
     if ((ret = createTmpDir()) < 0) {
         qDebug() << "Failed to create tmp dir in thread";

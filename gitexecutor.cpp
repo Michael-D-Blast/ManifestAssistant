@@ -64,6 +64,51 @@ QStringList GitExecutor::getBranchesInDir(QString dir)
     return branches;
 }
 
+QString GitExecutor::getCurrentBranch()
+{
+    QString currentBranch = "";
+    QStringList branches;
+
+    // Run git branch to get local branches
+    cmd = QString("git branch");
+
+    try {
+        branches = executeCmdAndReturnOutput();
+    }
+    catch (MyError e) {
+        throw;
+    }
+
+    for (int i = 0; i < branches.size(); i++) {
+        if (branches[i].contains("*")) {      // The one which contains * is current branch
+            currentBranch = branches[i].section(' ', 1, 1);
+        }
+    }
+
+    return currentBranch;
+}
+
+QString GitExecutor::getCurrentBranchInDir(QString dir)
+{
+    QString currentBranch = "";
+
+    QDir d(dir);
+    if (!d.exists()) {
+        qDebug() << dir << "doesn't exist";
+        throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
+    }
+    setWorkingDirectory(dir);
+
+    try {
+        currentBranch = getCurrentBranch();
+    }
+    catch (MyError e) {
+        throw;
+    }
+
+    return currentBranch;
+}
+
 int GitExecutor::clone(QString repo)
 {
     int ret = 0;
@@ -120,6 +165,42 @@ int GitExecutor::checkoutInDir(QString ref, QString dir)
     setWorkingDirectory(dir);
 
     ret = checkout(ref);
+
+    return ret;
+}
+
+int GitExecutor::commit(QString commitMessage)
+{
+    int ret = 0;
+
+    cmd = QString("git add .");
+    qDebug() << "Running " << cmd;
+
+    ret = executeCmd();
+    if (ret != 0)
+        return ret;
+
+    cmd = QString("git commit -m \"%1\"").arg(commitMessage);
+    qDebug() << "Running " << cmd;
+
+    ret = executeCmd();
+
+    return ret;
+}
+
+int GitExecutor::commitInDir(QString commitMessage, QString dir)
+{
+    int ret = 0;
+
+    QDir d(dir);
+    if (!d.exists()) {
+        qDebug() << dir << "doesn't exist";
+        return -1;
+    }
+
+    setWorkingDirectory(dir);
+
+    ret = commit(commitMessage);
 
     return ret;
 }

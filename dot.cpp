@@ -5,18 +5,18 @@
 #include "myerror.h"
 #include "gitexecutor.h"
 #include <QStringList>
+#include <QMutex>
+#include <QWaitCondition>
 
 // TODO: Select the workspace dir in a dialog
 static const QString WORKSPACE_DIR = "/home/bsp/mtws/";
+extern QMutex complete;
+extern QWaitCondition waitCondition;
+static const QString DEFAULT_ROOT_COMPONENT = "Esmeralda";
 
 Dot::Dot()
 {
-
-}
-
-Dot::Dot(QString dotFileName)
-{
-
+    rootComponent = DEFAULT_ROOT_COMPONENT;
 }
 
 void Dot::setFile(QString file)
@@ -98,12 +98,6 @@ void Dot::generateDependencyPyramid()
                     dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild());
                 }
             }
-#if 0   // I intended to get the branches information to let user select branch in combo box, but it's a waste of time of download all the repos if they don't exist
-            // Add branches
-            GitExecutor gitExecutor;
-            QStringList branches = gitExecutor.getBranchesInDir(WORKSPACE_DIR + "/" + dependencyPyramid[i][j].getName());
-            dependencyPyramid[i][j].setBranches(branches);
-#endif
         }
     }
 }
@@ -156,6 +150,10 @@ void Dot::displayDependencyPyramid() const
 void Dot::generateDependencyPyramidLevel0()
 {
     Component c(dependencyTree.at(0).getParent());
+
+    // Get the branch of Esmeralda
+    GitExecutor gitExecutor;
+    gitExecutor.getCurrentBranchInDir(workingDir + "/" + rootComponent);
     ComponentsList l;
 
     l << c;
@@ -268,6 +266,20 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
     }
 
     if (needUpdate) {
+        // If the manifest is changed because its dependency changes, but not specified by user.
+        // We don't know to which branch to commit, so we need user to input the branch here.
+        // Check if component know which branch to commit
+        if (component.getBranchToCommit().isEmpty()) {  // This component doesn't know which branch to commit
+            componentNeedsBranch = component.getName();
+            emit requestBranchDialog();
+            complete.lock();
+            qDebug() << "Before waiting for branch dialog";
+            waitCondition.wait(&complete);
+            qDebug() << "After waiting for branch dialog, branch got is " << branchInputInDialog;
+            complete.unlock();
+
+            component.setBranchToCommit(branchInputInDialog);
+        }
         component.commitChangeOfManifest();
         component.creatNewTag();
     }
