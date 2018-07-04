@@ -176,7 +176,6 @@ QString Component::updateBuildInManifest()
 #endif
 }
 
-// It's not allowed to use the tag in this method;
 int Component::commitChangeOfManifest()
 {
 #ifdef DO_DUMMY_PROCESS
@@ -185,6 +184,9 @@ int Component::commitChangeOfManifest()
     return 0;
 #endif
     // Git checkout to the specified branch
+    if (branchToCommit.isEmpty()) {
+
+    }
 
     // Git commit
 }

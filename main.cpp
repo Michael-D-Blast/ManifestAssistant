@@ -1,5 +1,6 @@
 #include "dialog.h"
 #include <QApplication>
+#include <QDebug>
 
 // TODO: Calulate the path according to the working dir environment
 const QString RootDotFile = "/home/bsp/mtws/obj/armbuildroot/Esmeralda/repo.dot";

@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     fileeditor.cpp \
     manifesteditor.cpp \
     myerror.cpp \
-    taglineedit.cpp
+    taglineedit.cpp \
+    branchdialog.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
@@ -33,6 +34,7 @@ HEADERS  += dialog.h \
     fileeditor.h \
     manifesteditor.h \
     myerror.h \
-    taglineedit.h
+    taglineedit.h \
+    branchdialog.h
 
 FORMS    +=

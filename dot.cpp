@@ -281,9 +281,12 @@ Component Dot::componentSpecifiedTo(Component component)
     {
         if (component.getName() == componentsToUpdate[i].getName()) {   // If this component is in the update list
             QString newTag = componentsToUpdate[i].getTag();
+            QString branchToCommit = componentsToUpdate[i].getBranchToCommit();
+
             qDebug() << component.getName() << " is specified to " << newTag << " in update list";
 
             component.setTag(newTag);   // Change its tag, so the caller will get a component with both new tag and dependencies. component is a local variable, so it's safe to change its tag here.
+            component.setBranchToCommit(branchToCommit);    // We also need to know which branch we should commit to
             break;
         }
     }

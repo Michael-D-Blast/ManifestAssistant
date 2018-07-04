@@ -68,8 +68,10 @@ private:
 
     // We need to change the componentsListNewAdded
     void processSingleComponent(Component component, ComponentsList &componentsListNewAdded);
+
     // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
     bool updateSingleManifestIfNeeded(Component component);
+
     // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
     Component componentSpecifiedTo(Component component);
 
