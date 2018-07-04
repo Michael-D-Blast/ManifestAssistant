@@ -40,6 +40,10 @@ private:
 
     QGridLayout *gridLayout;
     QLabel *label;
+    QLabel *componentName;
+    QLabel *componentBranch;
+    QLabel *componentTag;
+
     QPushButton *ok;
     struct ComponentInputter componentInputters[COMPONENTS_MAX_NUM];
 

@@ -11,6 +11,17 @@ Dialog::Dialog(QWidget *parent) :
     label->setText("Please select the components you'd like to update and specify the branch and tag you'd like to update to.");
     gridLayout->addWidget(label, 0, 0, 1, 5);
 
+    componentName = new QLabel(this);
+    componentBranch = new QLabel(this);
+    componentTag = new QLabel(this);
+
+    componentName->setText("NAME");
+    componentBranch->setText("BRANCH");
+    componentTag->setText("TAG");
+
+    gridLayout->addWidget(componentName, 1, 1, 1, 1);
+    gridLayout->addWidget(componentBranch, 1, 2, 1, 1);
+    gridLayout->addWidget(componentTag, 1, 3, 1, 1);
 
     for (int i = 0; i < COMPONENTS_MAX_NUM; i++) {
         componentInputters[i].name =  new QComboBox(this);
@@ -91,38 +102,3 @@ void Dialog::oKClicked()
     ok->setEnabled(false);
 }
 
-
-#if 0
-void Dialog::on_cBoxName1_currentIndexChanged(int index)
-{
-    // The first index of combo box is NULL, so index
-    if (index == 0) {
-        ui->lineEdit1->setText("");
-    } else {
-        Component c = dot.getAllComponentsList().at(index - 1);
-        ui->lineEdit1->setText(c.getTag());
-    }
-}
-
-void Dialog::on_cBoxName2_currentIndexChanged(int index)
-{
-    // The first index of combo box is NULL, so index
-    if (index == 0) {
-        ui->lineEdit2->setText("");
-    } else {
-        Component c = dot.getAllComponentsList().at(index - 1);
-        ui->lineEdit2->setText(c.getTag());
-    }
-}
-
-void Dialog::on_cBoxName3_currentIndexChanged(int index)
-{
-    // The first index of combo box is NULL, so index
-    if (index == 0) {
-        ui->lineEdit3->setText("");
-    } else {
-        Component c = dot.getAllComponentsList().at(index - 1);
-        ui->lineEdit3->setText(c.getTag());
-    }
-}
-#endif
