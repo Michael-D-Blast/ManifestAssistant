@@ -6,7 +6,6 @@
 #include <QFileDialog>
 
 // TODO: Calulate the path according to the working dir environment
-const QString RootDotFile = "/home/bsp/mtws/obj/armbuildroot/Esmeralda/repo.dot";
 
 QWaitCondition waitCondition;
 QMutex complete;

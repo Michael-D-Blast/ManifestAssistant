@@ -150,10 +150,15 @@ void Dot::displayDependencyPyramid() const
 void Dot::generateDependencyPyramidLevel0()
 {
     Component c(dependencyTree.at(0).getParent());
+    QString currentBranch;
 
     // Get the branch of Esmeralda
     GitExecutor gitExecutor;
-    gitExecutor.getCurrentBranchInDir(workingDir + "/" + rootComponent);
+    currentBranch = gitExecutor.getCurrentBranchInDir(workingDir + "/" + rootComponent);
+    qDebug() << "Current branch is " << currentBranch;
+
+    c.setTag(currentBranch);    // For the root component, we can't use its tag because it is always master, so we use its current branch as tag
+
     ComponentsList l;
 
     l << c;
