@@ -1,6 +1,7 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 #include <QDebug>
+#include <QMessageBox>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent)
@@ -77,21 +78,36 @@ void Dialog::setComboxItems()
     }
 }
 
-void Dialog::comboBoxNIndexChanged()
-{
-    qDebug() << "index is ";
-}
-
-
 void Dialog::oKClicked()
 {
     QString name;
+    QString branch;
     QString tag;
 
-//    name = ui->cBoxName1->currentText();
-//    tag = ui->lineEdit1->text();
+    for (int i = 0; i < COMPONENTS_MAX_NUM; i++) {
+        struct ComponentInputter c = componentInputters[i];
 
+        name = c.name->currentText();
+        if (name != "NONE") {
+            branch = c.branch->text();
+            tag = c.branch->text();
+            Component component(name, tag);
+            component.setBranchToCommit(branch);
 
+            // Check the validity of branch and tag
+
+            if (!componentInputIsValid(component)) {
+
+                // TODO: Tell user which information is wrong
+
+                QMessageBox::warning(this, "WARN", "Invalid component information", QMessageBox::Yes);
+
+                return;
+            }
+
+            dot.setComponentToUpdate(component);
+        }
+    }
 
     dot.displayComponentsToUpdate();
 
@@ -100,5 +116,21 @@ void Dialog::oKClicked()
     backendThread.start();
 
     ok->setEnabled(false);
+}
+
+bool Dialog::componentInputIsValid(Component component)
+{
+    QString branchToCommit = component.getBranchToCommit();
+    QString tag = component.getTag();
+
+    if (branchToCommit.isEmpty())
+        return false;
+
+    if (tag.isEmpty())
+        return false;
+
+    // TODO: Check the format of the branch and tag
+
+    return true;
 }
 

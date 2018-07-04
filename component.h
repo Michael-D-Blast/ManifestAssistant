@@ -19,16 +19,17 @@ public:
     // Get Methods
     QString getName() const;
     QString getTag() const;
+    QString getBranchToCommit() const;
+
     ComponentsList getDependencies();
     virtual bool is(Component anotherComponent);
     void displayDependencies() const;
 
     // Set Methods
     void setName(QString name);
-
     void setTag(QString tag);
-
     void setBranches(QStringList branches);
+    void setBranchToCommit(QString branchToCommit);
 
     int checkoutToTag();
 

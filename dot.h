@@ -35,7 +35,6 @@ public:
     void displayDependencyTree();
     void displayDependencyPyramid() const;
     ComponentsList getAllComponentsList();
-    virtual void setComponentToUpdate(Component componentToUpdate);
     void displayComponentsToUpdate() const;
 
     // Set Methods
@@ -47,6 +46,8 @@ public:
     void updateLocalManifests();
     static QString updateTag(const QString &tag);
 
+    // Add a component into the component list to be udpated
+    virtual void setComponentToUpdate(Component componentToUpdate);
 
 private:
     QFile dotFile;

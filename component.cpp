@@ -47,6 +47,11 @@ void Component::setBranches(QStringList branches)
     this->branches = branches;
 }
 
+void Component::setBranchToCommit(QString branchToCommit)
+{
+    this->branchToCommit = branchToCommit;
+}
+
 QString Component::getName() const
 {
     return name;
@@ -55,6 +60,11 @@ QString Component::getName() const
 QString Component::getTag() const
 {
     return tag;
+}
+
+QString Component::getBranchToCommit() const
+{
+    return branchToCommit;
 }
 
 ComponentsList Component::getDependencies()

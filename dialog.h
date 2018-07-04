@@ -28,7 +28,6 @@ public:
     Dot dot;
 
 private slots:
-    void comboBoxNIndexChanged();
     void oKClicked();
 
 private:
@@ -51,6 +50,9 @@ private:
 
     // TODO: After Refactoring the class Component, choose a more appropriate type hold as less information as possible.
     ComponentsList components;      // Store the components information, get them from dot.
+
+    // Check the input branch, tag of the component to be updated is valid
+    bool componentInputIsValid(Component);
 };
 
 #endif // DIALOG_H
