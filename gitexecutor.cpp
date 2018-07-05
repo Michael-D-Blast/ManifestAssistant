@@ -205,6 +205,37 @@ int GitExecutor::commitInDir(QString file, QString commitMessage, QString dir)
     return ret;
 }
 
+int GitExecutor::push(QString branch)
+{
+    int ret = 0;
+
+    // TODO: use an argument to substitute origin
+
+    cmd = QString("git push origin %1:%1").arg(branch);
+    qDebug() << "Running " << cmd;
+
+    ret = executeCmd();
+
+    return ret;
+}
+
+int GitExecutor::pushInDir(QString branch, QString dir)
+{
+    int ret = 0;
+
+    QDir d(dir);
+    if (!d.exists()) {
+        qDebug() << dir << "doesn't exist";
+        return -1;
+    }
+
+    setWorkingDirectory(dir);
+
+    ret = push(branch);
+
+    return ret;
+}
+
 void GitExecutor::setCmd(QString cmd)
 {
     cmd = "git " + cmd;     // not used for now

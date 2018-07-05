@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QMessageBox>
 
 // TODO: Select the workspace dir in a dialog
 static const QString WORKSPACE_DIR = "/home/bsp/mtws/";
@@ -128,6 +129,7 @@ void Dot::updateComponentTagInUpdateList(Component component)
             QString tag = componentsToUpdate.at(i).getTag();
             QString newTag = updateTag(tag);
             componentsToUpdate[i].setTag(newTag);
+            componentsToUpdate[i].setUpdated(true);
             qDebug() << "Change tag from " << tag << " to " << newTag << " for " << component.getName();
         }
     }
@@ -214,6 +216,31 @@ void Dot::updateLocalManifests()
     }
 }
 
+int Dot::pushLocalCommits()
+{
+    int ret = 0;
+
+    qDebug() << "Dummy: push local commits to remote";
+    Component c;
+
+    for (int i = 0; i < componentsToUpdate.size(); i++) {
+        c = componentsToUpdate[i];
+        if (c.needToBeUpdated()) {
+            qDebug() << "Push local commits of " << c.getName() << " to remote branch " << c.getBranchToCommit();
+
+            // Push local commits to remote repository
+            GitExecutor gitExecutor;
+            ret = gitExecutor.pushInDir(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
+            if (ret != 0) {
+                QMessageBox::warning(0, "WARN", "Failed to push local commits to remote!", QMessageBox::Yes);
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
 void Dot::processSingleComponent(Component component, ComponentsList &componentsListNewAdded)
 {
     Component componentSpecified = componentSpecifiedTo(component);
@@ -227,32 +254,31 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
         // TODO: check if the manifests are same
     }
 
-    bool needUpdate;
+    Component finalComponent;
 
     try {
-        needUpdate = updateSingleManifestIfNeeded(componentSpecified);
+        finalComponent = updateSingleManifestIfNeeded(componentSpecified);
     }
     catch (MyError e) {
         throw;
     }
 
-    if (needUpdate) {
+    if (finalComponent.needToBeUpdated()) {
         if (alreadySpecified) {
             // This component has been specified by user to be updated, however, as its dependency also needs to be updated,
             // update the tag of this component in the updating component list.
             updateComponentTagInUpdateList(componentSpecified);
         } else {
-            component.updateTag();  // Update my tag here. component is a local variable, so it doesn't affect the one in dependencyPyramid.
-            componentsListNewAdded << component;
+            finalComponent.updateTag();  // Update my tag here. component is a local variable, so it doesn't affect the one in dependencyPyramid.
+            finalComponent.setUpdated(true);
+            componentsListNewAdded << finalComponent;
         }
     }
 
 }
 
-bool Dot::updateSingleManifestIfNeeded(Component component)
+Component Dot::updateSingleManifestIfNeeded(Component component)
 {
-    bool needUpdate = false;
-
     ComponentsList dependencies = component.getDependencies();
 
     for (int i = 0; i < dependencies.size(); i++)
@@ -266,11 +292,11 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
             if (ret != 0) {
                 throw MyError(ret, "updateDependencyInManifest error", __LINE__, __FUNCTION__);
             }
-            needUpdate = true;
+            component.setUpdated(true);
         }
     }
 
-    if (needUpdate) {
+    if (component.needToBeUpdated()) {
         // If the manifest is changed because its dependency changes, but not specified by user.
         // We don't know to which branch to commit, so we need user to input the branch here.
         // Check if component know which branch to commit
@@ -289,7 +315,7 @@ bool Dot::updateSingleManifestIfNeeded(Component component)
         component.creatNewTag();
     }
 
-    return needUpdate;
+    return component;
 }
 
 Component Dot::componentSpecifiedTo(Component component)

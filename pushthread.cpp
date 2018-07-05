@@ -20,7 +20,7 @@ void PushThread::run()
 {
     int ret = 0;
 
-    qDebug() << "Dummy push local commits to remote";
+    dot->pushLocalCommits();
 
     result = ret;
 }

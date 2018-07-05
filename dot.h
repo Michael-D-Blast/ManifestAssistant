@@ -45,30 +45,25 @@ public:
     void displayDependencyTree();
     void displayDependencyPyramid() const;
     ComponentsList getAllComponentsList();
-
     void displayComponentsToUpdate() const;
 
     // Set Methods
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
-    // Transfer dependencyPyramid to allComponentsList
-    void generateAllComponentsList();
+    void generateAllComponentsList();   // Transfer dependencyPyramid to allComponentsList
     void generateDependencyPyramid();
     void updateLocalManifests();
+    int pushLocalCommits();
     static QString updateTag(const QString &tag);
-
-    // Add a component into the component list to be udpated
-    virtual void setComponentToUpdate(Component componentToUpdate);
+    virtual void setComponentToUpdate(Component componentToUpdate);    // Add a component into the component list to be udpated
 
 signals:
     void requestBranchDialog();
 
 private:
     QFile dotFile;
-    // Pair information read from .dot file
-    QList<DependencyPair> dependencyTree;
-    // Component pyramid from componentsGroup
-    ComponentsMesh dependencyPyramid;
+    QList<DependencyPair> dependencyTree;   // Pair information read from .dot file
+    ComponentsMesh dependencyPyramid;       // Component pyramid from componentsGroup
     ComponentsList componentsToUpdate;
     ComponentsList allComponentsList;   // used for items in combox
     QString rootComponent;      // The entry component of the product, default is Esmeralda
@@ -83,7 +78,7 @@ private:
     void processSingleComponent(Component component, ComponentsList &componentsListNewAdded);
 
     // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
-    bool updateSingleManifestIfNeeded(Component component);
+    Component updateSingleManifestIfNeeded(Component component);
 
     // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
     Component componentSpecifiedTo(Component component);

@@ -12,20 +12,20 @@
 
 Component::Component()
 {
-
+    needUpdated = false;
 }
 
 Component::Component(QString nameOfComponent)
 {
     name = nameOfComponent;
-
+    needUpdated = false;
 }
 
 Component::Component(QString nameOfComponent, QString tagOfComponent)
 {
     name = nameOfComponent;
     tag = tagOfComponent;
-
+    needUpdated = false;
 }
 
 Component::~Component()
@@ -53,6 +53,11 @@ void Component::setBranchToCommit(QString branchToCommit)
     this->branchToCommit = branchToCommit;
 }
 
+void Component::setUpdated(bool yn)
+{
+    needUpdated = yn;
+}
+
 QString Component::getName() const
 {
     return name;
@@ -66,6 +71,11 @@ QString Component::getTag() const
 QString Component::getBranchToCommit() const
 {
     return branchToCommit;
+}
+
+bool Component::needToBeUpdated() const
+{
+    return needUpdated;
 }
 
 ComponentsList Component::getDependencies()
@@ -194,7 +204,7 @@ int Component::commitChangeOfManifest()
     }
 
     // Git commit
-    ret = gitExecutor.commitInDir("repo-manifest", "Test commit", TMP_COMPONENT_DIR + "/" + name);
+    ret = gitExecutor.commitInDir("repo-manifest", "Bump repo-manifest", TMP_COMPONENT_DIR + "/" + name);
     if (ret != 0) {
         qDebug() << "Failed to commit to branch " << branchToCommit;
         return ret;

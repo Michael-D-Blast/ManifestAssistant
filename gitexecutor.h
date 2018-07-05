@@ -25,6 +25,8 @@ public:
     int checkoutInDir(QString ref, QString dir);
     int commit(QString file, QString commitMessage);    // Not only commit, but also git add the file first
     int commitInDir(QString file, QString commitMessage, QString dir);
+    int push(QString branch);    // Assume the name of local bransh is same with remote branch
+    int pushInDir(QString branch, QString dir);
 
 protected:
     void setCmd(QString cmd);
