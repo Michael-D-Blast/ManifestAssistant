@@ -48,6 +48,7 @@ Dialog::Dialog(QWidget *parent) :
     setLayout(gridLayout);
 
     connect(&dot, SIGNAL(requestBranchDialog()), this, SLOT(responseBranchDialog()));
+    connect(&backendThread, SIGNAL(finished()), this, SLOT(backendThreadFinished()));
 }
 
 Dialog::~Dialog()
@@ -133,6 +134,14 @@ void Dialog::responseBranchDialog()
     dot.branchInputInDialog = dlg.getBranch();
 
     waitCondition.wakeAll();
+}
+
+void Dialog::backendThreadFinished()
+{
+    // Get the result of backendThread
+    int ret = backendThread.getResult();
+
+    exit(ret);
 }
 
 bool Dialog::componentInputIsValid(Component component)

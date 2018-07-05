@@ -11,7 +11,12 @@ extern QMutex complete;
 
 BackendThread::BackendThread()
 {
+    result = 0;
+}
 
+int BackendThread::getResult() const
+{
+    return result;
 }
 
 void BackendThread::setDot(Dot *dotInput)
@@ -21,23 +26,13 @@ void BackendThread::setDot(Dot *dotInput)
 
 void BackendThread::run()
 {
-    int ret;
+    int ret = 0;
 
     qDebug() << "Run backend thread";
 
-#if 0   // test
-    complete.lock();
-    qDebug() << "Before wait";
-    emit dot->requestBranchDialog();
-    waitCondition.wait(&complete);
-    qDebug() << "After wait";
-    complete.unlock();
-
-    return;
-#endif
-
     if ((ret = createTmpDir()) < 0) {
         qDebug() << "Failed to create tmp dir in thread";
+        return ;
     }
 
     try {
@@ -46,6 +41,8 @@ void BackendThread::run()
     catch (MyError e) {
         e.displayError();
     }
+
+    result = ret;
 }
 
 int BackendThread::createTmpDir()

@@ -31,6 +31,8 @@ private slots:
     void oKClicked();
     void responseBranchDialog();
 
+    void backendThreadFinished();
+
 private:
     struct ComponentInputter {
         QComboBox *name;

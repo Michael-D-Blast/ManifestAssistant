@@ -9,6 +9,9 @@ class BackendThread:public QThread
 public:
     BackendThread();
 
+    // Get Methods
+    int getResult() const;
+
     // Set Methods
     void setDot(Dot *dotInput);
 
@@ -19,6 +22,8 @@ private:
     Dot *dot;
 
     int createTmpDir();
+
+    int result;
 };
 
 #endif // BACKENDTHREAD_H
