@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include "component.h"
 #include "taglineedit.h"
+#include "pushthread.h"
 
 // TODO: Add components dynamically
 #define COMPONENTS_MAX_NUM 10
@@ -30,8 +31,8 @@ public:
 private slots:
     void oKClicked();
     void responseBranchDialog();
-
     void backendThreadFinished();
+    void pushThreadFinished();
 
 private:
     struct ComponentInputter {
@@ -53,6 +54,7 @@ private:
     struct ComponentInputter componentInputters[COMPONENTS_MAX_NUM];
 
     BackendThread backendThread;
+    PushThread pushThread;
 
     // TODO: After Refactoring the class Component, choose a more appropriate type hold as less information as possible.
     ComponentsList components;      // Store the components information, get them from dot.

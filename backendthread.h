@@ -13,7 +13,7 @@ public:
     int getResult() const;
 
     // Set Methods
-    void setDot(Dot *dotInput);
+    void setDot(Dot *dot);
 
 protected:
     void run();

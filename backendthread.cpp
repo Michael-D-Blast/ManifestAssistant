@@ -19,9 +19,9 @@ int BackendThread::getResult() const
     return result;
 }
 
-void BackendThread::setDot(Dot *dotInput)
+void BackendThread::setDot(Dot *dot)
 {
-    dot = dotInput;
+    this->dot = dot;
 }
 
 void BackendThread::run()
@@ -32,17 +32,20 @@ void BackendThread::run()
 
     if ((ret = createTmpDir()) < 0) {
         qDebug() << "Failed to create tmp dir in thread";
+        result = -1;
         return ;
     }
 
+    // TODO: Change the return value type from void to int and check its return value here instead of using try/catch
     try {
         dot->updateLocalManifests();
     }
     catch (MyError e) {
         e.displayError();
+        result = -1;
     }
 
-    result = ret;
+    result = ret;   // Set the result of thread, the main dialog will get it later
 }
 
 int BackendThread::createTmpDir()

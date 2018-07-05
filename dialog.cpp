@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QWaitCondition>
 #include "branchdialog.h"
+#include "localcommitscheckdialog.h"
 
 extern QWaitCondition waitCondition;
 
@@ -49,6 +50,8 @@ Dialog::Dialog(QWidget *parent) :
 
     connect(&dot, SIGNAL(requestBranchDialog()), this, SLOT(responseBranchDialog()));
     connect(&backendThread, SIGNAL(finished()), this, SLOT(backendThreadFinished()));
+    connect(&pushThread, SIGNAL(finished()), this, SLOT(pushThreadFinished()));
+
 }
 
 Dialog::~Dialog()
@@ -140,8 +143,28 @@ void Dialog::backendThreadFinished()
 {
     // Get the result of backendThread
     int ret = backendThread.getResult();
+    if (ret != 0)
+        exit(ret);
 
-    exit(ret);
+    // Open a new dialog to let user check the local commits before pushing them to remote repository
+    LocalCommitsCheckDialog dlg(this);
+    if (dlg.exec() != QDialog::Accepted) {    // If user didn't click NEXT, we assume he didn't check the local commits. For safety, we don't push them to remote
+        close();
+    }
+
+    // Call a new thread to push local commits to remote
+    pushThread.setDot(&dot);
+    pushThread.start();
+}
+
+void Dialog::pushThreadFinished()
+{
+    int ret = pushThread.getResult();
+    if (ret != 0) {
+        QMessageBox::warning(this, "WARN", "Failed to push local commits to remote", QMessageBox::Yes);
+    }
+
+    close();
 }
 
 bool Dialog::componentInputIsValid(Component component)

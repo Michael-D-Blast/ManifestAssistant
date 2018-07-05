@@ -23,7 +23,9 @@ SOURCES += main.cpp\
     manifesteditor.cpp \
     myerror.cpp \
     taglineedit.cpp \
-    branchdialog.cpp
+    branchdialog.cpp \
+    localcommitscheckdialog.cpp \
+    pushthread.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
@@ -35,6 +37,8 @@ HEADERS  += dialog.h \
     manifesteditor.h \
     myerror.h \
     taglineedit.h \
-    branchdialog.h
+    branchdialog.h \
+    localcommitscheckdialog.h \
+    pushthread.h
 
 FORMS    +=

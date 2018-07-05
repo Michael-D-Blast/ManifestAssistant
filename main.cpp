@@ -4,6 +4,7 @@
 #include <QWaitCondition>
 #include <QMutex>
 #include <QFileDialog>
+#include "localcommitscheckdialog.h"
 
 // TODO: Calulate the path according to the working dir environment
 
