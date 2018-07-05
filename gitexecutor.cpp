@@ -169,11 +169,11 @@ int GitExecutor::checkoutInDir(QString ref, QString dir)
     return ret;
 }
 
-int GitExecutor::commit(QString commitMessage)
+int GitExecutor::commit(QString file, QString commitMessage)
 {
     int ret = 0;
 
-    cmd = QString("git add .");
+    cmd = QString("git add %1").arg(file);
     qDebug() << "Running " << cmd;
 
     ret = executeCmd();
@@ -188,7 +188,7 @@ int GitExecutor::commit(QString commitMessage)
     return ret;
 }
 
-int GitExecutor::commitInDir(QString commitMessage, QString dir)
+int GitExecutor::commitInDir(QString file, QString commitMessage, QString dir)
 {
     int ret = 0;
 
@@ -200,7 +200,7 @@ int GitExecutor::commitInDir(QString commitMessage, QString dir)
 
     setWorkingDirectory(dir);
 
-    ret = commit(commitMessage);
+    ret = commit(file, commitMessage);
 
     return ret;
 }

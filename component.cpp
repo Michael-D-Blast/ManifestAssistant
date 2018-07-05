@@ -194,7 +194,7 @@ int Component::commitChangeOfManifest()
     }
 
     // Git commit
-    ret = gitExecutor.commitInDir("Test commit", TMP_COMPONENT_DIR + "/" + name);
+    ret = gitExecutor.commitInDir("repo-manifest", "Test commit", TMP_COMPONENT_DIR + "/" + name);
     if (ret != 0) {
         qDebug() << "Failed to commit to branch " << branchToCommit;
         return ret;

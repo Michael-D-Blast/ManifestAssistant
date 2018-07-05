@@ -23,8 +23,8 @@ public:
     int cloneInDir(QString repo, QString dir);
     int checkout(QString ref);
     int checkoutInDir(QString ref, QString dir);
-    int commit(QString commitMessage);
-    int commitInDir(QString commitMessage, QString dir);
+    int commit(QString file, QString commitMessage);    // Not only commit, but also git add the file first
+    int commitInDir(QString file, QString commitMessage, QString dir);
 
 protected:
     void setCmd(QString cmd);
