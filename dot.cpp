@@ -113,7 +113,10 @@ QString Dot::updateTag(const QString &tag)
     build = tag.section('.', 3, 3).toInt(&ok, 10);
 
     if (ok) {
-        build += 1;
+        if (build < 10000)      // According to our tag management policy, tag are values larger than 10000
+            build = 10000;
+        else
+            build += 1;
     }
 
     newTag = tag.section('.',0, 2) + "." + QString::number(build);
@@ -126,11 +129,11 @@ void Dot::updateComponentTagInUpdateList(Component component)
     for (int i = 0; i < componentsToUpdate.size(); i++)
     {
         if (component.getName() == componentsToUpdate.at(i).getName()) {
-            QString tag = componentsToUpdate.at(i).getTag();
-            QString newTag = updateTag(tag);
-            componentsToUpdate[i].setTag(newTag);
+            QString oldTag = componentsToUpdate.at(i).getTag();
+            QString newTag = component.getTag();
+            componentsToUpdate[i].setTag(newTag);   // Update the component's tag in updatelist
             componentsToUpdate[i].setUpdated(true);
-            qDebug() << "Change tag from " << tag << " to " << newTag << " for " << component.getName();
+            qDebug() << "Change tag from " << oldTag << " to " << newTag << " for " << component.getName();
         }
     }
 }
@@ -232,7 +235,7 @@ int Dot::pushLocalCommits()
             GitExecutor gitExecutor;
             ret = gitExecutor.pushInDir(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
             if (ret != 0) {
-                QMessageBox::warning(0, "WARN", "Failed to push local commits to remote!", QMessageBox::Yes);
+                qDebug() << "Failed to push local commits to remote!";
                 break;
             }
         }
@@ -269,7 +272,6 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
             // update the tag of this component in the updating component list.
             updateComponentTagInUpdateList(componentSpecified);
         } else {
-            finalComponent.updateTag();  // Update my tag here. component is a local variable, so it doesn't affect the one in dependencyPyramid.
             finalComponent.setUpdated(true);
             componentsListNewAdded << finalComponent;
         }
@@ -311,8 +313,13 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
 
             component.setBranchToCommit(branchInputInDialog);
         }
+
         component.commitChangeOfManifest();
-        component.creatNewTag();
+
+        if (component.getName() != dependencyPyramid[0][0].getName()) {     // For now, we don't create a new tag for the root component, as such Esmeralda
+            component.updateTag();  // Update tag in this object
+            component.creatNewTag();    // Creat a new tag for repo accroding the member tag
+        }
     }
 
     return component;

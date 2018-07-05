@@ -21,22 +21,26 @@ GitExecutor::~GitExecutor()
 QStringList GitExecutor::getBranches()
 {
     QStringList branches;
+    QStringList origBranches;
 
     // Run git branch -a to get all the branches
     cmd = QString("git branch -a");
 
     try {
-        branches = executeCmdAndReturnOutput();
+        origBranches = executeCmdAndReturnOutput();
     }
     catch (MyError e) {
         throw;
     }
 
     QString b;
-    for (int i = 0; i < branches.size(); i++) {
-        b = branches.at(i);
-        if (b.contains("remote") && !b.contains("->")) {
-            branches[i] = b.section('/', 2, 2);
+    for (int i = 0; i < origBranches.size(); i++) {
+        b = origBranches.at(i);
+
+        // TODO: Check why there are *mater and HEAD->
+
+        if (b.contains("remote") && !b.contains("->") && !b.contains("*")) {
+            branches << b.section('/', 2, 2);
         }
     }
 
@@ -81,6 +85,9 @@ QString GitExecutor::getCurrentBranch()
 
     for (int i = 0; i < branches.size(); i++) {
         if (branches[i].contains("*")) {      // The one which contains * is current branch
+            if (branches[i].contains("detached")) {
+                throw MyError(-1, "Not on any branch", __LINE__, __FUNCTION__);
+            }
             currentBranch = branches[i].section(' ', 1, 1);
         }
     }
@@ -211,7 +218,7 @@ int GitExecutor::push(QString branch)
 
     // TODO: use an argument to substitute origin
 
-    cmd = QString("git push origin %1:%1").arg(branch);
+    cmd = QString("git push origin %1:%1 --tags").arg(branch);
     qDebug() << "Running " << cmd;
 
     ret = executeCmd();
@@ -232,6 +239,35 @@ int GitExecutor::pushInDir(QString branch, QString dir)
     setWorkingDirectory(dir);
 
     ret = push(branch);
+
+    return ret;
+}
+
+int GitExecutor::tag(QString newTag)
+{
+    int ret = 0;
+
+    cmd = QString("git tag %1").arg(newTag);
+    qDebug() << "Running " << cmd;
+
+    ret = executeCmd();
+
+    return ret;
+}
+
+int GitExecutor::tagInDir(QString newTag, QString dir)
+{
+    int ret = 0;
+
+    QDir d(dir);
+    if (!d.exists()) {
+        qDebug() << dir << "doesn't exist";
+        return -1;
+    }
+
+    setWorkingDirectory(dir);
+
+    ret = tag(newTag);
 
     return ret;
 }

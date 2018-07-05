@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QDialog>
+#include <QComboBox>
 
 class BranchDialog : public QDialog
 {
@@ -26,10 +27,7 @@ private slots:
 private:
     QVBoxLayout *vLayout;
     QLabel *instruction;
-
-    // TODO: Use a combo box display all the branches that this component has
-
-    QLineEdit *lineedit;
+    QComboBox *combo;
     QPushButton *ok;
 
     QString branch;

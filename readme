@@ -3,3 +3,5 @@
 3. tag 号仅应该由 repo-manifest 中的 VERSION 和 BUILD 来生成, 即 tag 与 VERSION 和 BUILD 有着一一对应的关系
 4. 其实没有必要让用户来输入branch, 因为用户指定的是子组件的tag号, 他并不知道哪些父组件要被升级, 而只有父组件才需要branch
 5. Esmeralda 需要在当前分支的最新节点才可以, 因为我们会切换到当前分支的最新节点来修改 repo-manifest, 这个要求是颗粒的, 因为如果不是在最新节点, 那么这次的 commit 本身就会跟其它的冲突
+6. 目前不提供自动打 pkg 的功能, 更新了相应的源码之后, 需要用户自己来打 pkg 包, 主要是因为打 pkg 比较费时间, 暂时不想在这个程序里面来处理
+7. 目前对于跟组件 Esmeralda, 我们不打 tag 号, 原因是已经有些 tag 号没有打, 需要先研究下为什么有的组件的 tag 和 repo-manifest 的 VERSION BUILD 没有完全对应

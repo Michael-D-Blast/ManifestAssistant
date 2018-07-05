@@ -161,7 +161,7 @@ void Dialog::pushThreadFinished()
 {
     int ret = pushThread.getResult();
     if (ret != 0) {
-        QMessageBox::warning(this, "WARN", "Failed to push local commits to remote", QMessageBox::Yes);
+        qDebug() << "Failed to push local commits to remote";
     }
 
     close();

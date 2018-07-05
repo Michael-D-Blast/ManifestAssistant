@@ -1,24 +1,34 @@
 #include "branchdialog.h"
 #include <QMessageBox>
 #include <QDebug>
+#include "gitexecutor.h"
 
 BranchDialog::BranchDialog(QString component, QWidget *parent) :
     QDialog(parent)
 {
     vLayout = new QVBoxLayout(this);
     instruction = new QLabel(this);
-    lineedit = new QLineEdit(this);
+    combo = new QComboBox(this);
     ok = new QPushButton(this);
 
     branch = "";
 
     instruction->setText("Please specify to which branch to commit for " + component);
 
+    GitExecutor git;
+    // TODO: Pass the address instead of using a fixed one
+    QStringList items;
+    items = git.getBranchesInDir("/tmp/components/" + component);
+    for (int i = 0; i < items.size(); i++) {
+        qDebug() << "Add item " << items[i] << " to combo box";
+    }
+    combo->addItems(items);
+
     ok->setText("OK");
 
     vLayout->addWidget(instruction);
-    vLayout->addWidget(lineedit);
-    vLayout->addWidget(ok);
+    vLayout->addWidget(combo, 0, Qt::AlignHCenter);
+    vLayout->addWidget(ok, 0, Qt::AlignHCenter);
 
     setLayout(vLayout);
 
@@ -29,7 +39,6 @@ BranchDialog::~BranchDialog()
 {
     delete vLayout;
     delete instruction;
-    delete lineedit;
     delete ok;
 }
 
@@ -40,7 +49,7 @@ QString BranchDialog::getBranch() const
 
 void BranchDialog::saveBranch()
 {
-    branch = lineedit->text();
+    branch = combo->currentText();
     if (branch.isEmpty()) {
         QMessageBox::warning(this, "WARN", "Branch cannot be empty!", QMessageBox::Yes);
         return;

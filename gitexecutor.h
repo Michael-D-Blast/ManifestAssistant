@@ -27,6 +27,8 @@ public:
     int commitInDir(QString file, QString commitMessage, QString dir);
     int push(QString branch);    // Assume the name of local bransh is same with remote branch
     int pushInDir(QString branch, QString dir);
+    int tag(QString newTag);
+    int tagInDir(QString newTag, QString dir);
 
 protected:
     void setCmd(QString cmd);

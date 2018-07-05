@@ -213,10 +213,23 @@ int Component::commitChangeOfManifest()
     return 0;
 }
 
-// It's not allowed to use the tag in this method;
 int Component::creatNewTag()
 {
+#ifdef DO_DUMMY_PROCESS
     qDebug() << "Dummy: creat a new tag for " << name;
+
+    return 0;
+#endif
+    int ret = 0;
+    GitExecutor gitExecutor;
+
+    // Git tag
+    ret = gitExecutor.tagInDir(tag, TMP_COMPONENT_DIR + "/" + name);
+    if (ret != 0) {
+        qDebug() << "Failed to create tag " << tag;
+    }
+
+    return ret;
 }
 
 void Component::updateTag(void)
