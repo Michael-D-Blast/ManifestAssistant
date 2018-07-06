@@ -255,6 +255,9 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
         componentSpecified.checkoutToTag();
 
         // TODO: check if the manifests are same
+
+        // Generate its commit message file
+        componentSpecified.generateCommitMessageFileBetweenTags(component.getTag(), componentSpecified.getTag());
     }
 
     Component finalComponent;
@@ -294,6 +297,10 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
             if (ret != 0) {
                 throw MyError(ret, "updateDependencyInManifest error", __LINE__, __FUNCTION__);
             }
+
+            // Write commit message of dependency
+            component.setCommitMessageOfDependency(dependencies[i], c);
+
             component.setUpdated(true);
         }
     }

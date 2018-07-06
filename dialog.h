@@ -40,14 +40,14 @@ private:
 
         // TODO: Actually, we don't need the branch here, because user don't need to specify branch here
 
-        QLineEdit *branch;
+//        QLineEdit *branch;
         TagLineEdit *tag;
     };
 
     QGridLayout *gridLayout;
     QLabel *label;
     QLabel *componentName;
-    QLabel *componentBranch;
+//    QLabel *componentBranch;
     QLabel *componentTag;
 
     QPushButton *ok;

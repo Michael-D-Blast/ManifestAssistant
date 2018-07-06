@@ -8,7 +8,7 @@
 
 // TODO: Calulate the path according to the working dir environment
 
-#define MY_DEBUG
+//#define MY_DEBUG
 
 QWaitCondition waitCondition;
 QMutex complete;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     // 2. Split the components to serveral groups in diffent levels
     w.dot.generateDependencyPyramid();
 
-    w.dot.displayDependencyPyramid();
+//    w.dot.displayDependencyPyramid();
 
     w.dot.generateAllComponentsList();
 

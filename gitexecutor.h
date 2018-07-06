@@ -23,12 +23,14 @@ public:
     int cloneInDir(QString repo, QString dir);
     int checkout(QString ref);
     int checkoutInDir(QString ref, QString dir);
-    int commit(QString file, QString commitMessage);    // Not only commit, but also git add the file first
-    int commitInDir(QString file, QString commitMessage, QString dir);
+    int commit(QString file, QString commitMessageFile);    // Not only commit, but also git add the file first
+    int commitInDir(QString file, QString commitMessageFile, QString dir);
     int push(QString branch);    // Assume the name of local bransh is same with remote branch
     int pushInDir(QString branch, QString dir);
     int tag(QString newTag);
     int tagInDir(QString newTag, QString dir);
+    QString getLog(QString oldTag, QString newTag);
+    QString getLogInDir(QString oldTag, QString newTag, QString dir);
 
 protected:
     void setCmd(QString cmd);

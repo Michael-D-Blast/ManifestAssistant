@@ -203,8 +203,15 @@ int Component::commitChangeOfManifest()
         return ret;
     }
 
+    QString commitMessageFile = TMP_COMPONENT_DIR + "/commit_messages/" + name;
+    QFile f(commitMessageFile);
+    if (!f.exists()) {
+        qDebug() << commitMessageFile << " doesn't exist!";
+        return -1;
+    }
+
     // Git commit
-    ret = gitExecutor.commitInDir("repo-manifest", "Bump repo-manifest", TMP_COMPONENT_DIR + "/" + name);
+    ret = gitExecutor.commitInDir("repo-manifest", commitMessageFile , TMP_COMPONENT_DIR + "/" + name);
     if (ret != 0) {
         qDebug() << "Failed to commit to branch " << branchToCommit;
         return ret;
@@ -236,6 +243,75 @@ void Component::updateTag(void)
 {
     QString newTag = Dot::updateTag(tag);
     tag = newTag;
+}
+
+int Component::generateCommitMessageFileBetweenTags(QString oldTag, QString newTag)
+{
+    QString log;
+
+    QFile file(TMP_COMPONENT_DIR + "/commit_messages/" + name);
+    if(!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+        qDebug() << "Can't open " << TMP_COMPONENT_DIR << "/commit_messages/" << name;
+        return -1;
+    }
+
+    // Run git log to get commit log
+    GitExecutor git;
+    log = git.getLogInDir(oldTag, newTag, TMP_COMPONENT_DIR + "/" + name);
+
+    qDebug() << "Log got is " << log;
+
+    QTextStream in(&file);
+    in << log << endl;
+
+    file.close();
+}
+
+// TODO: Maybe we don't need two arguments
+
+int Component::setCommitMessageOfDependency(Component oldDependency, Component newDependency)
+{
+    QString componentFileName = TMP_COMPONENT_DIR + "/commit_messages/" + name;
+    QFile componentFile(componentFileName);
+
+    QString dependencyFileName = TMP_COMPONENT_DIR + "/commit_messages/" + oldDependency.getName();
+    QFile dependencyFile(dependencyFileName);
+
+    // TODO: Check if we can change the mode to WriteOnly
+
+    if (!componentFile.open(QIODevice::ReadWrite | QIODevice::Append | QIODevice::Text)) {
+        qDebug() << "Failed to open " << componentFileName;
+
+        return -1;
+    }
+
+    if (!dependencyFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open " << dependencyFileName;
+
+        componentFile.close();
+        return -1;
+    }
+
+    QTextStream c(&componentFile);
+    QTextStream d(&dependencyFile);
+    d.seek(0);
+
+    QString bump = "Bump " + oldDependency.getName() + " from " + oldDependency.getTag() + " to " + newDependency.getTag();
+    c << bump << endl;
+    c << "Changes in " << oldDependency.getName() << " : " << endl;
+
+    while(!d.atEnd()) {
+        QString line;
+        line = d.readLine();
+        line = "    " + line;
+        qDebug() << "Read " << line << " from " << dependencyFileName;
+        c << line << endl;
+    }
+
+    componentFile.close();
+    dependencyFile.close();
+
+    return 0;
 }
 
 void Component::displayDependencies() const

@@ -20,7 +20,7 @@ BranchDialog::BranchDialog(QString component, QWidget *parent) :
     QStringList items;
     items = git.getBranchesInDir("/tmp/components/" + component);
     for (int i = 0; i < items.size(); i++) {
-        qDebug() << "Add item " << items[i] << " to combo box";
+//        qDebug() << "Add item " << items[i] << " to combo box";
     }
     combo->addItems(items);
 

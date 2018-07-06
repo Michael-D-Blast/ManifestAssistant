@@ -9,7 +9,7 @@ TagLineEdit::TagLineEdit(ComponentsList *components, QWidget *parent) :
 
 void TagLineEdit::componentChanged(int index)
 {
-    qDebug() << "componentChanged index: " << index;
+//    qDebug() << "componentChanged index: " << index;
 
     // The first index of combo box is NULL, so index
     if (index == 0) {

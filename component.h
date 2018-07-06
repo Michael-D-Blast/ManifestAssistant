@@ -48,6 +48,10 @@ public:
 
     void updateTag(void);
 
+    int generateCommitMessageFileBetweenTags(QString oldTag, QString newTag);    // For components whose souce code has been changed
+
+    int setCommitMessageOfDependency(Component oldDependency, Component newDependency);
+
 private:
     QString name;
     QString tag;

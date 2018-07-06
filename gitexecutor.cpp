@@ -176,7 +176,7 @@ int GitExecutor::checkoutInDir(QString ref, QString dir)
     return ret;
 }
 
-int GitExecutor::commit(QString file, QString commitMessage)
+int GitExecutor::commit(QString file, QString commitMessageFile)
 {
     int ret = 0;
 
@@ -187,7 +187,7 @@ int GitExecutor::commit(QString file, QString commitMessage)
     if (ret != 0)
         return ret;
 
-    cmd = QString("git commit -m \"%1\"").arg(commitMessage);
+    cmd = QString("git commit -F %1").arg(commitMessageFile);
     qDebug() << "Running " << cmd;
 
     ret = executeCmd();
@@ -195,7 +195,7 @@ int GitExecutor::commit(QString file, QString commitMessage)
     return ret;
 }
 
-int GitExecutor::commitInDir(QString file, QString commitMessage, QString dir)
+int GitExecutor::commitInDir(QString file, QString commitMessageFile, QString dir)
 {
     int ret = 0;
 
@@ -207,7 +207,7 @@ int GitExecutor::commitInDir(QString file, QString commitMessage, QString dir)
 
     setWorkingDirectory(dir);
 
-    ret = commit(file, commitMessage);
+    ret = commit(file, commitMessageFile);
 
     return ret;
 }
@@ -270,6 +270,52 @@ int GitExecutor::tagInDir(QString newTag, QString dir)
     ret = tag(newTag);
 
     return ret;
+}
+
+QString GitExecutor::getLog(QString oldTag, QString newTag)
+{
+    QStringList origLogs;
+    QString log = "";
+
+    cmd = QString("git log --oneline --no-merges %1..%2").arg(oldTag).arg(newTag);
+
+    try {
+        origLogs = executeCmdAndReturnOutput();
+    }
+    catch (MyError e) {
+        throw;
+    }
+
+    for (int i = 0; i < origLogs.size(); i++) {
+        log = origLogs[i];
+
+        if (!log.isEmpty()) {
+            break;
+        }
+    }
+
+    return log;
+}
+
+QString GitExecutor::getLogInDir(QString oldTag, QString newTag, QString dir)
+{
+    QString log;
+
+    QDir d(dir);
+    if (!d.exists()) {
+        qDebug() << dir << "doesn't exist";
+        throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
+    }
+    setWorkingDirectory(dir);
+
+    try {
+        log = getLog(oldTag, newTag);
+    }
+    catch (MyError e) {
+        throw;
+    }
+
+    return log;
 }
 
 void GitExecutor::setCmd(QString cmd)

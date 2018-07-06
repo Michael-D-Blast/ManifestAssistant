@@ -77,5 +77,13 @@ int BackendThread::createTmpDir()
         return -2;
     }
 
+    qDebug() << "Creating " << TMP_COMPONENT_DIR << "/commit_messages/";
+    if (dir.mkdir(TMP_COMPONENT_DIR + "/commit_messages")) {
+        qDebug() << "Succeeded to create " << TMP_COMPONENT_DIR << "/commit_messages/";
+    } else {
+        qDebug() << "Failed to create " << TMP_COMPONENT_DIR << "/commit_messages/";
+        return -2;
+    }
+
     return 0;
 }
