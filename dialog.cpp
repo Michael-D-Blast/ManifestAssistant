@@ -1,5 +1,4 @@
 #include "dialog.h"
-#include "ui_dialog.h"
 #include <QDebug>
 #include <QMessageBox>
 #include <QWaitCondition>
