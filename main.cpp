@@ -5,10 +5,11 @@
 #include <QMutex>
 #include <QFileDialog>
 #include "localcommitscheckdialog.h"
+#include "repoenv.h"
 
 // TODO: Calulate the path according to the working dir environment
 
-//#define MY_DEBUG
+#define MY_DEBUG
 
 QWaitCondition waitCondition;
 QMutex complete;
@@ -19,8 +20,9 @@ int main(int argc, char *argv[])
     Dialog w;
 
 #ifdef MY_DEBUG
-    w.dot.workingDir = "/home/bsp/mtws";
-    QString dotFile = "/home/bsp/mtws/obj/armbuildroot/Esmeralda/repo.dot";
+    w.dot.workingDir = "/home/abb/mtws";
+    QString dotFile = "/home/abb/mtws/obj/armbuildroot/Esmeralda/repo.dot";
+    QString envFile = "/home/abb/mtws/obj/armbuildroot/Esmeralda/repo.env";
 #else
     w.dot.workingDir = QFileDialog::getExistingDirectory(0, "Please choose your working directory",
                                                      "/home",
@@ -29,6 +31,11 @@ int main(int argc, char *argv[])
 
     QString dotFile = QFileDialog::getOpenFileName(0, "Please choose repo.dot", w.dot.workingDir + "/obj");
 #endif
+
+    RepoEnv env(envFile);
+
+    return 0;
+
     w.dot.setFile(dotFile);
 
     // 1. Parse the dot file, get a list of the dependency pairs
