@@ -207,7 +207,7 @@ void Dot::displayComponentsToUpdate() const
     for (int i = 0; i < componentsToUpdate.size(); i++)
     {
         Component c = componentsToUpdate.at(i);
-        qDebug() << c.getName() << "is going to be updated to " << c.getTag() << " and commited to " << c.getBranchToCommit();
+        qDebug() << c.getName() << "is going to be updated to " << c.getTag();
     }
 }
 
