@@ -85,6 +85,7 @@ private:
 
     // Set Methods
     void updateComponentTagInUpdateList(Component component);
+    void removeOldComponentInUpdateList(QString componentName);     // remove the component from the update list
 };
 
 #endif // DOT_H

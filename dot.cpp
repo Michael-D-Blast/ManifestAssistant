@@ -138,6 +138,18 @@ void Dot::updateComponentTagInUpdateList(Component component)
     }
 }
 
+void Dot::removeOldComponentInUpdateList(QString componentName)
+{
+    for (int i = 0; i < componentsToUpdate.size(); i++)
+    {
+        if (componentName == componentsToUpdate.at(i).getName()) {
+            componentsToUpdate.removeAt(i);
+            qDebug() << "Remove " << componentName << " from componentsToUpdate at position " << i;
+            break;
+        }
+    }
+}
+
 void Dot::displayDependencyPyramid() const
 {
     for (int level = 0; level < dependencyPyramid.size(); level++)
@@ -269,15 +281,27 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
         throw;
     }
 
+//    if (finalComponent.needToBeUpdated()) {
+//        if (alreadySpecified) {
+//            // This component has been specified by user to be updated, however, as its dependency also needs to be updated,
+//            // update the tag of this component in the updating component list.
+//            updateComponentTagInUpdateList(componentSpecified);
+//        } else {
+//            finalComponent.setUpdated(true);
+//            componentsListNewAdded << finalComponent;
+//        }
+//    }
+
     if (finalComponent.needToBeUpdated()) {
+        // If this component has already been specified by user, we need to remove it.
         if (alreadySpecified) {
             // This component has been specified by user to be updated, however, as its dependency also needs to be updated,
-            // update the tag of this component in the updating component list.
-            updateComponentTagInUpdateList(componentSpecified);
-        } else {
-            finalComponent.setUpdated(true);
-            componentsListNewAdded << finalComponent;
+            // So remove it from the updating component list.
+            removeOldComponentInUpdateList(finalComponent.getName());
         }
+
+        finalComponent.setUpdated(true);
+        componentsListNewAdded << finalComponent;
     }
 
 }
