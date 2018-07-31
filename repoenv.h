@@ -14,11 +14,13 @@ class RepoEnv
 public:
     explicit RepoEnv(QString filePath);
 
+    bool isPackage(QString component);
+
 private:
     QFile *envFile;
     QHash<QString, PackageSource> *envData;
 
-    int ParseComponentOpts(QString componentOpts);
+    int parseComponentOpts(QString componentOpts);
 };
 
 #endif // REPOENV_H

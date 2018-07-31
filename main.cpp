@@ -32,6 +32,9 @@ int main(int argc, char *argv[])
     QString dotFile = QFileDialog::getOpenFileName(0, "Please choose repo.dot", w.dot.workingDir + "/obj");
 #endif
 
+    RepoEnv repoEnv(envFile);
+
+    w.dot.setRepoEnv(&repoEnv);
     w.dot.setFile(dotFile);
 
     // 1. Parse the dot file, get a list of the dependency pairs

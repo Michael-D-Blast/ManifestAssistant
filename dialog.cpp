@@ -149,11 +149,11 @@ void Dialog::backendThreadFinished()
     LocalCommitsCheckDialog dlg(this);
     if (dlg.exec() != QDialog::Accepted) {    // If user didn't click NEXT, we assume he didn't check the local commits. For safety, we don't push them to remote
         close();
+    } else {
+        // Call a new thread to push local commits to remote
+        pushThread.setDot(&dot);
+        pushThread.start();
     }
-
-    // Call a new thread to push local commits to remote
-    pushThread.setDot(&dot);
-    pushThread.start();
 }
 
 void Dialog::pushThreadFinished()

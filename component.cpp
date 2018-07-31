@@ -165,26 +165,15 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
     return 0;
 }
 
-QString Component::updateBuildInManifest()
+int Component::updateBuildInManifest()
 {
-    // I thought the tag is VERSION.BUILD, but in fact, BUILD is always 0. So we don't update it in manifest.
-#if 0
-    QString newBuild = "";
+    QString newBuild = tag.section('.', 3, 3);
+
+    qDebug() << "New Build is " << newBuild;
     // Update BUILD in current manifest
-
-    // Check if the tag hold by this object is same with the one in repo-manifest
     ManifestEditor manifest(TMP_COMPONENT_DIR, name);
-    QString currentBuild = manifest.getBuildInManifest();
-    QString tagInManifest = manifest.getVersionInManifest() + "." + currentBuild;
 
-    if (tag != tagInManifest && tag != "master") {  // If VERSION.BUILD is different from the tag we hold and we aren't in tag
-        qDebug() << "Current tag is " << tag << ", but tag in manifest is " << tagInManifest;
-    }
-
-    qDebug() << "Current BUILD is " << currentBuild;
-
-    return newBuild;
-#endif
+    return (manifest.updateBuild(newBuild));
 }
 
 int Component::commitChangeOfManifest()

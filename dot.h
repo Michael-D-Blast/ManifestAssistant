@@ -8,6 +8,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QObject>
+#include "repoenv.h"
 
 
 class DependencyPair {
@@ -48,12 +49,14 @@ public:
     void displayComponentsToUpdate() const;
 
     // Set Methods
+    void setRepoEnv(RepoEnv *repoEnv);
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
     void generateAllComponentsList();   // Transfer dependencyPyramid to allComponentsList
     void generateDependencyPyramid();
     void updateLocalManifests();
     int pushLocalCommits();
+    int makePackages();      // Create package
     static QString updateTag(const QString &tag);
     virtual void setComponentToUpdate(Component componentToUpdate);    // Add a component into the component list to be udpated
 
@@ -67,6 +70,7 @@ private:
     ComponentsList componentsToUpdate;
     ComponentsList allComponentsList;   // used for items in combox
     QString rootComponent;      // The entry component of the product, default is Esmeralda
+    RepoEnv *repoEnv;           // makePackages needs this information to know if a component is package
 
     void processLineOfDependencyTree(QString line);
     void insertPairChildToPyramidLevel(int pairIndex, int level);
@@ -86,6 +90,7 @@ private:
     // Set Methods
     void updateComponentTagInUpdateList(Component component);
     void removeOldComponentInUpdateList(QString componentName);     // remove the component from the update list
+    int makeSinglePackage(Component component);
 };
 
 #endif // DOT_H

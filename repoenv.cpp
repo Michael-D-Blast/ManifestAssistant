@@ -19,12 +19,17 @@ RepoEnv::RepoEnv(QString filePath)
     while(!in.atEnd()) {
         QString line = in.readLine();
         if (line.startsWith(MT_COMPONENT_OPTS_KEYWORD)) {
-            ParseComponentOpts(line);
+            parseComponentOpts(line);
         }
     }
 }
 
-int RepoEnv::ParseComponentOpts(QString componentOpts)
+bool RepoEnv::isPackage(QString component)
+{
+    return (envData->value(component) == PKG);
+}
+
+int RepoEnv::parseComponentOpts(QString componentOpts)
 {
     int startIndex = componentOpts.indexOf('(') + 1;
     int endIndex = componentOpts.indexOf(')') - 1;

@@ -39,8 +39,7 @@ public:
 
     int updateDependencyInManifest(Component oldDependency, Component newDependency);
 
-    // Return new BUILD in QString
-    QString updateBuildInManifest();
+    int updateBuildInManifest();    // Update BUILD in manifest
 
     int commitChangeOfManifest();
 

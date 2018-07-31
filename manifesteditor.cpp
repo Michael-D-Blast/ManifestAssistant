@@ -46,3 +46,9 @@ int ManifestEditor::updateDependencyTag(const QString &oldTag, const QString &ne
     return (updateValueInLinesContainingKeyword(oldTag, newTag, dependency));
 }
 
+int ManifestEditor::updateBuild(const QString newBuild)
+{
+    QString oldBuild = getBuildInManifest();
+    return(updateValueInLinesContainingKeyword(oldBuild, newBuild, "BUILD"));
+}
+

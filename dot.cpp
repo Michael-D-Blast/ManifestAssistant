@@ -8,6 +8,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QMessageBox>
+#include <QDir>
 
 // TODO: Select the workspace dir in a dialog
 static const QString WORKSPACE_DIR = "/home/bsp/mtws/";
@@ -150,6 +151,31 @@ void Dot::removeOldComponentInUpdateList(QString componentName)
     }
 }
 
+int Dot::makeSinglePackage(Component component)
+{
+    int ret = 0;
+
+    QDir dir(TMP_COMPONENT_DIR + "/Build");
+
+    if (!dir.exists()) {
+        GitExecutor git;
+
+        ret = git.cloneInDir("Build", TMP_COMPONENT_DIR);
+        if (ret != 0)
+            return ret;
+
+        ret = git.checkoutInDir("sz", TMP_COMPONENT_DIR + "/Build");
+        if (ret != 0)
+            return ret;
+    }
+
+    CmdExecutor cmd;
+    cmd.setCmd(QString("jbuild -c -T %1 %2").arg(component.getName()).arg(component.getTag()));
+    ret = cmd.executeCmdInDir(TMP_COMPONENT_DIR);
+
+    return ret;
+}
+
 void Dot::displayDependencyPyramid() const
 {
     for (int level = 0; level < dependencyPyramid.size(); level++)
@@ -211,6 +237,11 @@ void Dot::displayComponentsToUpdate() const
     }
 }
 
+void Dot::setRepoEnv(RepoEnv *repoEnv)
+{
+    this->repoEnv = repoEnv;
+}
+
 void Dot::updateLocalManifests()
 {
     for (int i = dependencyPyramid.size() - 1; i >= 0; i--)
@@ -249,6 +280,25 @@ int Dot::pushLocalCommits()
             if (ret != 0) {
                 qDebug() << "Failed to push local commits to remote!";
                 break;
+            }
+        }
+    }
+
+    return ret;
+}
+
+int Dot::makePackages()
+{
+    int ret = 0;
+
+    qDebug() << "Creating packages ...";
+    Component c;
+
+    for (int i = 0; i < componentsToUpdate.size(); i++) {
+        c = componentsToUpdate[i];
+        if (c.needToBeUpdated()) {
+            if (repoEnv->isPackage(c.getName())) {
+                makeSinglePackage(c);
             }
         }
     }
@@ -344,6 +394,9 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
 
             component.setBranchToCommit(branchInputInDialog);
         }
+
+//        component.updateTag();  // Update tag in this object
+
 
         component.commitChangeOfManifest();
 

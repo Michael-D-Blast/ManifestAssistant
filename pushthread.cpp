@@ -18,9 +18,10 @@ void PushThread::setDot(Dot *dot)
 
 void PushThread::run()
 {
-    int ret = 0;
+    result = dot->pushLocalCommits();
+    if (result != 0)
+        return ;
 
-    dot->pushLocalCommits();
+    result = dot->makePackages();
 
-    result = ret;
 }
