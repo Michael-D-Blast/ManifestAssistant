@@ -3,6 +3,10 @@
 
 #include <QString>
 #include <QList>
+#include <QStringList>
+#include "repoenv.h"
+
+
 static const QString TMP_COMPONENT_DIR = "/tmp/components";
 
 typedef QList<class Component> ComponentsList;
@@ -24,6 +28,9 @@ public:
     ComponentsList getDependencies();
     virtual bool is(Component anotherComponent);
     void displayDependencies() const;
+    bool isPackage(const RepoEnv *repoEnv) const;
+    bool hasSourceCode(const QStringList &packagesWithoutSourceCode) const;
+    bool isPackageWithoutSourceCode(const RepoEnv *repoEnv, const QStringList &packagesWithoutSourceCode) const;
 
     // Set Methods
     void setName(QString name);
@@ -31,23 +38,13 @@ public:
     void setBranches(QStringList branches);
     void setBranchToCommit(QString branchToCommit);
     void setUpdated(bool yn);
-
     int checkoutToTag();
-
     void appendDependency(ComponentsList dependencies);
-
-    int updateDependencyInManifest(Component oldDependency, Component newDependency);
-
     int updateBuildInManifest();    // Update BUILD in manifest
-
     int commitChangeOfManifest();
-
     int creatNewTag();
-
     void updateTag(void);
-
     int generateCommitMessageFileBetweenTags(QString oldTag, QString newTag);    // For components whose souce code has been changed
-
     int setCommitMessageOfDependency(Component oldDependency, Component newDependency);
 
 private:

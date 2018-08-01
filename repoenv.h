@@ -14,7 +14,7 @@ class RepoEnv
 public:
     explicit RepoEnv(QString filePath);
 
-    bool isPackage(QString component);
+    bool isPackage(QString component) const;
 
 private:
     QFile *envFile;

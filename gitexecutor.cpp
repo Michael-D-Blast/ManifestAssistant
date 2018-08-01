@@ -104,7 +104,7 @@ void GitExecutor::commit(QString file, QString commitMessageFile, QString dir)
     }
 }
 
-void GitExecutor::push(QString branch, QString remote, QString dir)
+void GitExecutor::push(QString branch, QString dir, QString remote)
 {
     CmdExecutor cmd("git push " + remote + " " + branch + ":" + branch + " --tags");
 
@@ -144,26 +144,31 @@ void GitExecutor::tag(QString newTag, QString dir)
     }
 }
 
-QString GitExecutor::getLog(QString oldTag, QString newTag, QString dir)
+QStringList GitExecutor::getLog(QString oldTag, QString newTag, QString dir)
 {
+    QStringList log;
     QStringList output;
-    QString log = "";
+
+    // TODO: record the whole log
+
+    qDebug() << "git log --oneline --no-merges " << oldTag << ".." << newTag;
 
     CmdExecutor cmd("git log --oneline --no-merges " + oldTag + ".." + newTag);
 
-    try {
-        cmd.execute(dir);
-    } catch (MyError e) {
+    try
+    {
+        output = cmd.execute(dir);
+    }
+    catch (MyError e)
+    {
         e.displayError();
         throw;
     }
 
-    for (int i = 0; i < output.size(); i++) {
-        log = output[i];
-
-        if (!log.isEmpty()) {
-            break;
-        }
+    for (int i = 0; i < output.size(); i++)
+    {
+        if (!output[i].isEmpty())
+            log << output[i];
     }
 
     return log;

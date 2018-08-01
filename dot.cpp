@@ -11,6 +11,9 @@
 #include <QDir>
 #include "cmdexecutor.h"
 #include "repoexecutor.h"
+#include "componentpkgdir.h"
+#include "componentsrcdir.h"
+#include "repomanifest.h"
 
 // TODO: Select the workspace dir in a dialog
 static const QString WORKSPACE_DIR = "/home/abb/mtws/";
@@ -184,6 +187,9 @@ QString Dot::updateTag(const QString &tag)
     build = tag.section('.', 3, 3).toInt(&ok, 10);
 
     if (ok) {
+
+        // TODO: If BUILD is less than 10000, pop a dialog to let user set the tag
+
         if (build < 10000)      // According to our tag management policy, tag are values larger than 10000
             build = 10000;
         else
@@ -225,26 +231,19 @@ int Dot::makeSinglePackage(Component component)
 {
     int ret = 0;
 
-    QDir dir(TMP_COMPONENT_DIR + "/Build");
+    if (component.hasSourceCode(packagesWithoutSourceCode))
+    {
+        ComponentSrcDir build(TMP_COMPONENT_DIR, "Build", "sz");
+        if (!build.exists())
+            build.init();
 
-    if (!dir.exists()) {
-        GitExecutor git;
-
-        try {
-            git.clone("Build", TMP_COMPONENT_DIR);
-            git.checkout("sz", TMP_COMPONENT_DIR + "/Build");
-        } catch (MyError e) {
-            e.displayError();
-            return -1;
-        }
+        ComponentSrcDir componentSrcDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+        componentSrcDir.makePackage();
     }
-
-    CmdExecutor cmd("jbuild -c -T " + component.getName() + component.getTag());
-    try {
-        cmd.execute(TMP_COMPONENT_DIR);
-    } catch (MyError e) {
-        e.displayError();
-        return -1;
+    else
+    {
+        ComponentPkgDir componentPkgDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+        componentPkgDir.makePackage();
     }
 
     return ret;
@@ -395,16 +394,26 @@ int Dot::pushLocalCommits()
 
     for (int i = 0; i < componentsToUpdate.size(); i++) {
         c = componentsToUpdate[i];
-        if (c.needToBeUpdated()) {
-            qDebug() << "Push local commits of " << c.getName() << " to remote branch " << c.getBranchToCommit();
 
-            // Push local commits to remote repository
-            GitExecutor gitExecutor;
-            try {
-                gitExecutor.push(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
-            } catch (MyError e) {
-                e.displayError();
-                return -1;
+        // Although a component is in componentsToUpdate, it doesn't mean it needs to be push to remote.
+        // It maybe a component specified by user.
+        // So We still need to checkout by needToBeUpdated
+
+        if (c.needToBeUpdated()) {
+            if (!c.isPackageWithoutSourceCode(repoEnv, packagesWithoutSourceCode))
+            {
+                qDebug() << "Push local commits of " << c.getName() << " to remote branch " << c.getBranchToCommit();
+
+                GitExecutor gitExecutor;
+                try
+                {
+                    gitExecutor.push(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
+                }
+                catch (MyError e)
+                {
+                    e.displayError();
+                    return -1;
+                }
             }
         }
     }
@@ -419,10 +428,13 @@ int Dot::makePackages()
     qDebug() << "Creating packages ...";
     Component c;
 
-    for (int i = 0; i < componentsToUpdate.size(); i++) {
+    for (int i = 0; i < componentsToUpdate.size(); i++)
+    {
         c = componentsToUpdate[i];
-        if (c.needToBeUpdated()) {
-            if (repoEnv->isPackage(c.getName())) {
+        if (c.needToBeUpdated())
+        {
+            if (c.isPackage(repoEnv))
+            {
                 makeSinglePackage(c);
             }
         }
@@ -460,17 +472,6 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
         throw;
     }
 
-//    if (finalComponent.needToBeUpdated()) {
-//        if (alreadySpecified) {
-//            // This component has been specified by user to be updated, however, as its dependency also needs to be updated,
-//            // update the tag of this component in the updating component list.
-//            updateComponentTagInUpdateList(componentSpecified);
-//        } else {
-//            finalComponent.setUpdated(true);
-//            componentsListNewAdded << finalComponent;
-//        }
-//    }
-
     if (finalComponent.needToBeUpdated()) {
         // If this component has already been specified by user, we need to remove it.
         if (alreadySpecified) {
@@ -479,7 +480,6 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
             removeOldComponentInUpdateList(finalComponent.getName());
         }
 
-        finalComponent.setUpdated(true);
         componentsListNewAdded << finalComponent;
     }
 
@@ -493,47 +493,83 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
 
     for (int i = 0; i < dependencies.size(); i++)   // Iterate this component's dependencies
     {
-        Component c = componentSpecifiedTo(dependencies[i]);    // If the component is in update list, then return the one with new tag, otherwise, return itself
+        Component currentDependency = dependencies[i];
+
+        // TODO: Don't use componentSpecifiedTo to check if this component needs to be updated
+
+        Component c = componentSpecifiedTo(currentDependency);    // If the component is in update list, then return the one with new tag, otherwise, return itself
 
         // If the tag of this component isn't same with that of this component in updated list
-        if (dependencies[i].getTag() != c.getTag()) {   // So if their tags are different, it means this dependency changes
-            int ret;
-            ret = component.updateDependencyInManifest(dependencies[i], c);     // Pass both old dependency and new dependency
-            if (ret != 0) {
-                throw MyError(ret, "updateDependencyInManifest error", __LINE__, __FUNCTION__);
+        if (currentDependency.getTag() != c.getTag())   // So if their tags are different, it means this dependency changes
+        {
+            if (component.isPackage(repoEnv))    // Component is package
+            {
+                if (component.hasSourceCode(packagesWithoutSourceCode))    // Component is package, and has source code
+                {
+                    ComponentSrcDir componentSrcDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+                    componentSrcDir.init();
+
+                    if (!componentSrcDir.canMakePkg())    // Component is package, has source code, but can't make package
+                    {
+                        throw MyError(-1, "This package has source code, but can't make package", __LINE__, __FUNCTION__);
+                    }
+                }
+                else    // Component is package, but doesn't have source code
+                {
+                    ComponentPkgDir componentPkgDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+                    componentPkgDir.init();
+                }
+            }
+            else    // Component is source
+            {
+                ComponentSrcDir componentSrcDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+                componentSrcDir.init();
             }
 
-            // Write commit message of dependency
-            component.setCommitMessageOfDependency(dependencies[i], c);
+            RepoManifest repoManifest(TMP_COMPONENT_DIR + "/" + component.getName());
+            repoManifest.updateDependency(currentDependency.getName(), currentDependency.getTag(), c.getTag());
+
+            component.setCommitMessageOfDependency(dependencies[i], c);  // Write commit message of dependency
 
             component.setUpdated(true);
         }
     }
 
     if (component.needToBeUpdated()) {
-        // If the manifest is changed because its dependency changes, but not specified by user.
-        // We don't know to which branch to commit, so we need user to input the branch here.
-        // Check if component know which branch to commit
-        if (component.getBranchToCommit().isEmpty()) {  // This component doesn't know which branch to commit
-            componentNeedsBranch = component.getName();
-            emit requestBranchDialog();
-            complete.lock();
-            qDebug() << "Before waiting for branch dialog";
-            waitCondition.wait(&complete);
-            qDebug() << "After waiting for branch dialog, branch got is " << branchInputInDialog;
-            complete.unlock();
 
-            component.setBranchToCommit(branchInputInDialog);
+        if (component.getName() != dependencyPyramid[0][0].getName())
+            component.updateTag();  // Just update tag in object, not create a real tag in component dir
+
+        if (component.isPackageWithoutSourceCode(repoEnv, packagesWithoutSourceCode))   // For package that we don't its source code
+        {
+            RepoManifest repoManifest(TMP_COMPONENT_DIR + "/" + component.getName());
+            repoManifest.updateVersionTo(component.getTag());
+
+            // TODO: update the changelog
         }
+        else
+        {
+            // If the manifest is changed because its dependency changes, but not specified by user.
+            // We don't know to which branch to commit, so we need user to input the branch here.
+            // Check if component know which branch to commit
+            if (component.getBranchToCommit().isEmpty())  // This component doesn't know which branch to commit
+            {
+                // TODO: don't use a public variable componentNeedsBranch
 
-//        component.updateTag();  // Update tag in this object
+                componentNeedsBranch = component.getName();
+                emit requestBranchDialog();
+                complete.lock();
+                waitCondition.wait(&complete);
+                complete.unlock();
 
+                component.setBranchToCommit(branchInputInDialog);
+            }
 
-        component.commitChangeOfManifest();
+            component.commitChangeOfManifest();
 
-        if (component.getName() != dependencyPyramid[0][0].getName()) {     // For now, we don't create a new tag for the root component, as such Esmeralda
-            component.updateTag();  // Update tag in this object
-            component.creatNewTag();    // Creat a new tag for repo accroding the member tag
+            if (component.getName() != dependencyPyramid[0][0].getName()) {     // For now, we don't create a new tag for the root component, as such Esmeralda
+                component.creatNewTag();    // Creat a new tag for repo accroding the member tag
+            }
         }
     }
 

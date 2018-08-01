@@ -27,7 +27,12 @@ SOURCES += main.cpp\
     localcommitscheckdialog.cpp \
     pushthread.cpp \
     repoenv.cpp \
-    repoexecutor.cpp
+    repoexecutor.cpp \
+    componentdir.cpp \
+    workspace.cpp \
+    repomanifest.cpp \
+    componentpkgdir.cpp \
+    componentsrcdir.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
@@ -43,6 +48,11 @@ HEADERS  += dialog.h \
     localcommitscheckdialog.h \
     pushthread.h \
     repoenv.h \
-    repoexecutor.h
+    repoexecutor.h \
+    componentdir.h \
+    workspace.h \
+    repomanifest.h \
+    componentpkgdir.h \
+    componentsrcdir.h
 
 FORMS    +=

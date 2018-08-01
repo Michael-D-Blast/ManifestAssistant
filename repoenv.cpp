@@ -24,7 +24,7 @@ RepoEnv::RepoEnv(QString filePath)
     }
 }
 
-bool RepoEnv::isPackage(QString component)
+bool RepoEnv::isPackage(QString component) const
 {
     return (envData->value(component) == PKG);
 }

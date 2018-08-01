@@ -3,6 +3,8 @@
 
 #include "fileeditor.h"
 
+// TODO: Remove this class, use RepoManifest
+
 class ManifestEditor : public FileEditor
 {
 public:

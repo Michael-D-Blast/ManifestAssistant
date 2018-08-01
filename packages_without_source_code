@@ -1,0 +1,3 @@
+# Packages without source code, add or delete items in below line, seperated by space. Keep all items in one line.
+
+BoardBoot CpiAC CpiChademo CpiCombo gsoap Imi Polaris ResConvDsp

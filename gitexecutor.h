@@ -18,10 +18,10 @@ public:
     void clone(QString repo, QString dir = "");
     void checkout(QString ref, QString dir = "");
     void commit(QString file, QString commitMessageFile, QString dir = "");    // Not only commit, but also git add the file first
-    void push(QString branch, QString remote = "origin", QString dir = "");    // Assume the name of local bransh is same with remote branch
+    void push(QString branch, QString dir = "", QString remote = "origin");    // Assume the name of local bransh is same with remote branch
     void tag(QString newTag, QString dir = "");
     void fetch(QString dir = "");
-    QString getLog(QString oldTag, QString newTag, QString dir = "");
+    QStringList getLog(QString oldTag, QString newTag, QString dir = "");
 
 private:
     QString gitRepoAddress;

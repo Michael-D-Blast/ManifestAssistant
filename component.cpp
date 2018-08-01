@@ -127,39 +127,6 @@ void Component::appendDependency(ComponentsList dependencies)
     this->dependencies << dependencies;
 }
 
-int Component::updateDependencyInManifest(Component oldDependency, Component newDependency)
-{
-#ifdef DO_DUMMY_PROCESS
-    qDebug() << "In manifest of " << name << ", update " << oldDependency.getName() << " from " << oldDependency.getTag() << " to " << newDependency.getTag();
-
-    return 0;
-#endif
-    QString dependency = oldDependency.getName();
-    QString oldTag = oldDependency.getTag();
-    QString newTag = newDependency.getTag();
-
-    QString fileName = TMP_COMPONENT_DIR + "/" + name + "/" + "repo-manifest";
-    QFile file(fileName);
-
-    if (!file.exists()) {
-        qDebug() << fileName << " doesn't exist";
-        GitExecutor gitExecutor;
-        gitExecutor.clone(name, TMP_COMPONENT_DIR);
-        gitExecutor.checkout(tag, TMP_COMPONENT_DIR + "/" + name);
-    }
-
-    // Update the dependency's tag in repo-manifest
-    ManifestEditor manifest(TMP_COMPONENT_DIR, name);
-    int ret;
-
-    if ((ret = manifest.updateDependencyTag(oldTag, newTag, dependency)) < 0) {
-        qDebug() << "Failed to update the tag of " << dependency << " from " << oldTag << " to" << newTag << " in the manifest of " << name;
-        return -1;
-    }
-
-    return 0;
-}
-
 int Component::updateBuildInManifest()
 {
     QString newBuild = tag.section('.', 3, 3);
@@ -235,7 +202,7 @@ void Component::updateTag(void)
 
 int Component::generateCommitMessageFileBetweenTags(QString oldTag, QString newTag)
 {
-    QString log;
+    QStringList log;
 
     QFile file(TMP_COMPONENT_DIR + "/commit_messages/" + name);
     if(!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
@@ -247,10 +214,12 @@ int Component::generateCommitMessageFileBetweenTags(QString oldTag, QString newT
     GitExecutor git;
     log = git.getLog(oldTag, newTag, TMP_COMPONENT_DIR + "/" + name);
 
-    qDebug() << "Log got is " << log;
-
-    QTextStream in(&file);
-    in << log << endl;
+    QTextStream out(&file);
+    QStringList::const_iterator line;
+    for (line = log.constBegin(); line != log.constEnd(); ++line)
+    {
+        out << *line << endl;
+    }
 
     file.close();
 }
@@ -308,5 +277,20 @@ void Component::displayDependencies() const
     {
         qDebug() << "\t" << dependencies.at(i).getName() << "@" << dependencies.at(i).getTag();
     }
+}
+
+bool Component::isPackage(const RepoEnv *repoEnv) const
+{
+    return repoEnv->isPackage(name);
+}
+
+bool Component::hasSourceCode(const QStringList &packagesWithoutSourceCode) const
+{
+    return !packagesWithoutSourceCode.contains(name);
+}
+
+bool Component::isPackageWithoutSourceCode(const RepoEnv *repoEnv, const QStringList &packagesWithoutSourceCode) const
+{
+    return (isPackage(repoEnv) && (!hasSourceCode(packagesWithoutSourceCode)));
 }
 

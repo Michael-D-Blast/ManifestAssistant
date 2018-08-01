@@ -2,7 +2,7 @@
 #include "QDebug"
 #include <QByteArray>
 #include "myerror.h"
-
+#include <QDir>
 
 
 CmdExecutor::CmdExecutor(QString command)
@@ -15,7 +15,15 @@ QStringList CmdExecutor::execute(QString dir, unsigned int timeoutInMs)
     QStringList output;
 
     if (!dir.isEmpty())
+    {
+        QDir d(dir);
+        if (!d.exists())
+        {
+            throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
+        }
+
         setWorkingDirectory(dir);
+    }
 
     start(cmd);
 
