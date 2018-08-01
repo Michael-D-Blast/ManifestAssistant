@@ -21,7 +21,6 @@ public:
     QString getTag() const;
     QString getBranchToCommit() const;
     bool needToBeUpdated() const;
-
     ComponentsList getDependencies();
     virtual bool is(Component anotherComponent);
     void displayDependencies() const;
@@ -35,7 +34,7 @@ public:
 
     int checkoutToTag();
 
-    void appendDependency(Component dependentComponent);
+    void appendDependency(ComponentsList dependencies);
 
     int updateDependencyInManifest(Component oldDependency, Component newDependency);
 
@@ -56,7 +55,7 @@ private:
     QString tag;
     QStringList branches;   // All branches this component has, obsolete
     QString branchToCommit; // The branch we want to commit
-    ComponentsList dependencies;
+    ComponentsList dependencies;   // Just record the component's name, because we don't care the tag in dependencies
     bool needUpdated;    // If it true, the component should be pushed to remote. Default value is false
 };
 

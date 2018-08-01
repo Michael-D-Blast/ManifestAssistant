@@ -18,10 +18,7 @@ BranchDialog::BranchDialog(QString component, QWidget *parent) :
     GitExecutor git;
     // TODO: Pass the address instead of using a fixed one
     QStringList items;
-    items = git.getBranchesInDir("/tmp/components/" + component);
-    for (int i = 0; i < items.size(); i++) {
-//        qDebug() << "Add item " << items[i] << " to combo box";
-    }
+    items = git.getBranches("/tmp/components/" + component);
     combo->addItems(items);
 
     ok->setText("OK");

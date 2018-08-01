@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     branchdialog.cpp \
     localcommitscheckdialog.cpp \
     pushthread.cpp \
-    repoenv.cpp
+    repoenv.cpp \
+    repoexecutor.cpp
 
 HEADERS  += dialog.h \
     backendthread.h \
@@ -41,6 +42,7 @@ HEADERS  += dialog.h \
     branchdialog.h \
     localcommitscheckdialog.h \
     pushthread.h \
-    repoenv.h
+    repoenv.h \
+    repoexecutor.h
 
 FORMS    +=

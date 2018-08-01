@@ -9,6 +9,7 @@
 #include <QMutexLocker>
 #include <QObject>
 #include "repoenv.h"
+#include <QStringList>
 
 
 class DependencyPair {
@@ -44,21 +45,25 @@ public:
     void setFile(QString file);
     bool parseDependencyTree();
     void displayDependencyTree();
-    void displayDependencyPyramid() const;
+    void displayDependencyPyramid() const;  // Display the components and their dependencies in each level
     ComponentsList getAllComponentsList();
     void displayComponentsToUpdate() const;
+    void displayPackagesWithoutSourceCode() const;
 
     // Set Methods
     void setRepoEnv(RepoEnv *repoEnv);
     void generateDependencyPyramidLevel0();
     void generateFirstComponent();
     void generateAllComponentsList();   // Transfer dependencyPyramid to allComponentsList
-    void generateDependencyPyramid();
+    void generateDependencyPyramid();   // Generate dependency pyramid
+    int fetchSourceCodesOfPackages();   // Download source codes of packages if they have
+    void setDependenciesForPyramid();    // Look for dependencies for each component
     void updateLocalManifests();
     int pushLocalCommits();
     int makePackages();      // Create package
     static QString updateTag(const QString &tag);
     virtual void setComponentToUpdate(Component componentToUpdate);    // Add a component into the component list to be udpated
+    int generatePackagesWithoutSourceCode();
 
 signals:
     void requestBranchDialog();
@@ -71,6 +76,7 @@ private:
     ComponentsList allComponentsList;   // used for items in combox
     QString rootComponent;      // The entry component of the product, default is Esmeralda
     RepoEnv *repoEnv;           // makePackages needs this information to know if a component is package
+    QStringList packagesWithoutSourceCode;
 
     void processLineOfDependencyTree(QString line);
     void insertPairChildToPyramidLevel(int pairIndex, int level);
@@ -91,6 +97,7 @@ private:
     void updateComponentTagInUpdateList(Component component);
     void removeOldComponentInUpdateList(QString componentName);     // remove the component from the update list
     int makeSinglePackage(Component component);
+    ComponentsList getComponentDependenciesFromDependencyTree(QString component);      // Iterate the dependency tree, get the dependencies for the component which is a package and hasn't source code
 };
 
 #endif // DOT_H

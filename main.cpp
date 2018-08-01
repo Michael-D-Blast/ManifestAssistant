@@ -36,14 +36,13 @@ int main(int argc, char *argv[])
 
     w.dot.setRepoEnv(&repoEnv);
     w.dot.setFile(dotFile);
-
-    // 1. Parse the dot file, get a list of the dependency pairs
     w.dot.parseDependencyTree();
-
-    // 2. Split the components to serveral groups in diffent levels
     w.dot.generateDependencyPyramid();
-
-//    w.dot.displayDependencyPyramid();
+    w.dot.generatePackagesWithoutSourceCode();
+//    w.dot.displayPackagesWithoutSourceCode();
+    w.dot.fetchSourceCodesOfPackages();
+    w.dot.setDependenciesForPyramid();
+    w.dot.displayDependencyPyramid();
 
     w.dot.generateAllComponentsList();
 

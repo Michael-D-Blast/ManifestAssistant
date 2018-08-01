@@ -4,24 +4,18 @@
 #include <QProcess>
 #include <QStringList>
 
+const unsigned int CMD_TIMEOUT_IN_MS = 10 * 60 * 1000;
+
 class CmdExecutor : public QProcess
 {
 public:
-    CmdExecutor();
-    CmdExecutor(QString command);
-    ~CmdExecutor();
+    explicit CmdExecutor(QString command);
 
-    // Set Methods
-    virtual void setCmd(QString cmd);
-    int executeCmd();
-    int executeCmdInDir(QString dir);
-
-    QStringList executeCmdAndReturnOutput();
-
-protected:
-    QString cmd;
+    QStringList execute(QString dir = "", unsigned int timeoutInMs = CMD_TIMEOUT_IN_MS);
 
 private:
+    QString cmd;
+
 };
 
 #endif // CMDEXECUTOR_H

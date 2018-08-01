@@ -7,6 +7,7 @@
 #include <QDir>
 #include "manifesteditor.h"
 #include "branchdialog.h"
+#include "myerror.h"
 
 //#define DO_DUMMY_PROCESS
 
@@ -110,26 +111,20 @@ int Component::checkoutToTag()
     dir.removeRecursively();
 
     GitExecutor gitExecutor;
-    ret = gitExecutor.cloneInDir(name, TMP_COMPONENT_DIR);
-    if (ret < 0) {
-        qDebug() << "Failed to git clone " << name;
-
+    try {
+        gitExecutor.clone(name, TMP_COMPONENT_DIR);
+        gitExecutor.checkout(tag, TMP_COMPONENT_DIR + "/" + name);
+    } catch (MyError e) {
+        e.displayError();
         return -1;
-    }
-
-    ret = gitExecutor.checkoutInDir(tag, TMP_COMPONENT_DIR + "/" + name);
-    if (ret < 0) {
-        qDebug() << "Failed to git checkout " << tag;
-
-        return -2;
     }
 
     return ret;
 }
 
-void Component::appendDependency(Component dependentComponent)
+void Component::appendDependency(ComponentsList dependencies)
 {
-    dependencies << dependentComponent;
+    this->dependencies << dependencies;
 }
 
 int Component::updateDependencyInManifest(Component oldDependency, Component newDependency)
@@ -149,8 +144,8 @@ int Component::updateDependencyInManifest(Component oldDependency, Component new
     if (!file.exists()) {
         qDebug() << fileName << " doesn't exist";
         GitExecutor gitExecutor;
-        gitExecutor.cloneInDir(name, TMP_COMPONENT_DIR);
-        gitExecutor.checkoutInDir(tag, TMP_COMPONENT_DIR + "/" + name);
+        gitExecutor.clone(name, TMP_COMPONENT_DIR);
+        gitExecutor.checkout(tag, TMP_COMPONENT_DIR + "/" + name);
     }
 
     // Update the dependency's tag in repo-manifest
@@ -186,10 +181,11 @@ int Component::commitChangeOfManifest()
     // Git checkout to the specified branch
     int ret;
     GitExecutor gitExecutor;
-    ret = gitExecutor.checkoutInDir(branchToCommit, TMP_COMPONENT_DIR + "/" + name);
-    if (ret != 0) {
-        qDebug() << "Failed to checkout to branch " << branchToCommit;
-        return ret;
+    try {
+        gitExecutor.checkout(branchToCommit, TMP_COMPONENT_DIR + "/" + name);
+    } catch (MyError e) {
+        e.displayError();
+        return -1;
     }
 
     QString commitMessageFile = TMP_COMPONENT_DIR + "/commit_messages/" + name;
@@ -200,10 +196,11 @@ int Component::commitChangeOfManifest()
     }
 
     // Git commit
-    ret = gitExecutor.commitInDir("repo-manifest", commitMessageFile , TMP_COMPONENT_DIR + "/" + name);
-    if (ret != 0) {
-        qDebug() << "Failed to commit to branch " << branchToCommit;
-        return ret;
+    try {
+        gitExecutor.commit("repo-manifest", commitMessageFile , TMP_COMPONENT_DIR + "/" + name);
+    } catch (MyError e) {
+        e.displayError();
+        return -1;
     }
 
     return 0;
@@ -220,9 +217,11 @@ int Component::creatNewTag()
     GitExecutor gitExecutor;
 
     // Git tag
-    ret = gitExecutor.tagInDir(tag, TMP_COMPONENT_DIR + "/" + name);
-    if (ret != 0) {
-        qDebug() << "Failed to create tag " << tag;
+    try {
+        gitExecutor.tag(tag, TMP_COMPONENT_DIR + "/" + name);
+    } catch (MyError e) {
+        e.displayError();
+        return -1;
     }
 
     return ret;
@@ -246,7 +245,7 @@ int Component::generateCommitMessageFileBetweenTags(QString oldTag, QString newT
 
     // Run git log to get commit log
     GitExecutor git;
-    log = git.getLogInDir(oldTag, newTag, TMP_COMPONENT_DIR + "/" + name);
+    log = git.getLog(oldTag, newTag, TMP_COMPONENT_DIR + "/" + name);
 
     qDebug() << "Log got is " << log;
 

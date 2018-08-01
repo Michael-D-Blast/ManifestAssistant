@@ -9,12 +9,16 @@
 #include <QWaitCondition>
 #include <QMessageBox>
 #include <QDir>
+#include "cmdexecutor.h"
+#include "repoexecutor.h"
 
 // TODO: Select the workspace dir in a dialog
-static const QString WORKSPACE_DIR = "/home/bsp/mtws/";
+static const QString WORKSPACE_DIR = "/home/abb/mtws/";
 extern QMutex complete;
 extern QWaitCondition waitCondition;
 static const QString DEFAULT_ROOT_COMPONENT = "Esmeralda";
+const QString PACKAGES_WITHOUT_SOURCE_CODE_FILE = "packages_without_source_code";
+const QString PACKAGES_SOURCE_CODES_DIR = "/home/abb/packages_source_codes/";
 
 Dot::Dot()
 {
@@ -44,7 +48,7 @@ bool Dot::parseDependencyTree()
 
     dotFile.close();
 
-    displayDependencyTree();
+//    displayDependencyTree();
 
     return true;
 }
@@ -86,20 +90,86 @@ void Dot::generateDependencyPyramid()
 
         removeChildIfInUpperLevel(currentPair, currentLevel);
     }
+}
 
-    // Add dependencies and branches for each component
-    // TODO: Optimize the algorithm
+int Dot::fetchSourceCodesOfPackages()
+{
+    int ret = 0;
+
+    QDir dir(PACKAGES_SOURCE_CODES_DIR);
+
+    if (!dir.exists())
+        dir.mkpath(PACKAGES_SOURCE_CODES_DIR);
+
+    for (int i = 0; i < dependencyPyramid.size(); i++) {
+        for (int j = 0; j < dependencyPyramid[i].size(); j++) {
+            QString component = dependencyPyramid[i][j].getName();
+
+            if (repoEnv->isPackage(component)) {        // If this is a package
+                QDir componentDir(PACKAGES_SOURCE_CODES_DIR + "/" + component);
+
+                if (packagesWithoutSourceCode.contains(component))  // If this package doesn't have source code
+                    continue;   // Ignore it
+
+                if (componentDir.exists()) {  // If the source code of the package has already been downloaded
+                    GitExecutor git;
+                    try {
+                        git.fetch(PACKAGES_SOURCE_CODES_DIR + "/" + component);   // Fetch the latest codes
+                    } catch (MyError e) {
+                        e.displayError();
+                        throw;
+                    }
+                } else {        // If its source code hasn't been downloaded
+                    GitExecutor git;
+                    try {
+                        git.clone(component, PACKAGES_SOURCE_CODES_DIR);    // Git clone the source code
+                    } catch (MyError e) {
+                        e.displayError();
+                        throw;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Dot::setDependenciesForPyramid()
+{
     for (int i = 0; i < dependencyPyramid.size(); i++)
     {
         for (int j = 0; j < dependencyPyramid[i].size(); j++)
         {
-            // Add dependencies
-            for (int k = 0; k < dependencyTree.size(); k++)
+            QString component = dependencyPyramid[i][j].getName();
+            ComponentsList dependencies;
+            GitExecutor git;
+            RepoExecutor repo;
+
+            try
             {
-                if (dependencyTree[k].getParent().getName() == dependencyPyramid[i][j].getName()) {
-                    dependencyPyramid[i][j].appendDependency(dependencyTree[k].getChild());
+                if (repoEnv->isPackage(component))  // If this is a package
+                {
+                    if (packagesWithoutSourceCode.contains(component))  // and it doesn't have source code
+                    {
+                        dependencies = getComponentDependenciesFromDependencyTree(component);      // read its dependencies from repo.dot
+                    }
+                    else    // otherwise, this package has source code
+                    {
+                        git.checkout(dependencyPyramid[i][j].getTag(), PACKAGES_SOURCE_CODES_DIR + "/" + component);    // git checkout the source code to the tag
+                        dependencies = repo.getList(PACKAGES_SOURCE_CODES_DIR + "/" + component);       // call repo list --names-only to get its dependencies
+                    }
+                }
+                else    // If this component is built form source code
+                {
+                    dependencies = repo.getList(WORKSPACE_DIR + "/" + component);   // call repo list in workspace to get its dependencies
                 }
             }
+            catch (MyError e)
+            {
+                e.displayError();
+                throw;
+            }
+
+            dependencyPyramid[i][j].appendDependency(dependencies);
         }
     }
 }
@@ -160,20 +230,39 @@ int Dot::makeSinglePackage(Component component)
     if (!dir.exists()) {
         GitExecutor git;
 
-        ret = git.cloneInDir("Build", TMP_COMPONENT_DIR);
-        if (ret != 0)
-            return ret;
-
-        ret = git.checkoutInDir("sz", TMP_COMPONENT_DIR + "/Build");
-        if (ret != 0)
-            return ret;
+        try {
+            git.clone("Build", TMP_COMPONENT_DIR);
+            git.checkout("sz", TMP_COMPONENT_DIR + "/Build");
+        } catch (MyError e) {
+            e.displayError();
+            return -1;
+        }
     }
 
-    CmdExecutor cmd;
-    cmd.setCmd(QString("jbuild -c -T %1 %2").arg(component.getName()).arg(component.getTag()));
-    ret = cmd.executeCmdInDir(TMP_COMPONENT_DIR);
+    CmdExecutor cmd("jbuild -c -T " + component.getName() + component.getTag());
+    try {
+        cmd.execute(TMP_COMPONENT_DIR);
+    } catch (MyError e) {
+        e.displayError();
+        return -1;
+    }
 
     return ret;
+}
+
+ComponentsList Dot::getComponentDependenciesFromDependencyTree(QString component)
+{
+    ComponentsList dependencies;
+
+    QList<DependencyPair>::iterator pair;
+    for (pair = dependencyTree.begin(); pair != dependencyTree.end(); ++pair) {
+        if (pair->getParent().getName() == component) {
+            Component c(pair->getChild().getName(), pair->getChild().getTag());
+            dependencies << c;
+        }
+    }
+
+    return dependencies;
 }
 
 void Dot::displayDependencyPyramid() const
@@ -197,7 +286,7 @@ void Dot::generateDependencyPyramidLevel0()
 
     // Get the branch of Esmeralda
     GitExecutor gitExecutor;
-    currentBranch = gitExecutor.getCurrentBranchInDir(workingDir + "/" + rootComponent);
+    currentBranch = gitExecutor.getCurrentBranch(workingDir + "/" + rootComponent);
     qDebug() << "Current branch is " << currentBranch;
 
     c.setTag(currentBranch);    // For the root component, we can't use its tag because it is always master, so we use its current branch as tag
@@ -226,6 +315,33 @@ void Dot::setComponentToUpdate(Component componentToUpdate)
     componentsToUpdate.append(componentToUpdate);
 }
 
+int Dot::generatePackagesWithoutSourceCode()
+{
+    QFile f(PACKAGES_WITHOUT_SOURCE_CODE_FILE);
+    if (f.exists()) {
+        qDebug() << PACKAGES_WITHOUT_SOURCE_CODE_FILE << " exists";
+
+        if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qDebug() << "Failed to open " << PACKAGES_WITHOUT_SOURCE_CODE_FILE;
+
+            return -1;
+        }
+
+        QTextStream in(&f);
+
+        while(!in.atEnd()) {
+            QString line = in.readLine();
+
+            if (line.contains('#'))
+                continue;
+
+            packagesWithoutSourceCode += line.split(' ', QString::SkipEmptyParts);
+        }
+    }
+
+    return 0;
+}
+
 void Dot::displayComponentsToUpdate() const
 {
     qDebug() << "Components to update are:";
@@ -235,6 +351,14 @@ void Dot::displayComponentsToUpdate() const
         Component c = componentsToUpdate.at(i);
         qDebug() << c.getName() << "is going to be updated to " << c.getTag();
     }
+}
+
+void Dot::displayPackagesWithoutSourceCode() const
+{
+    QStringList::const_iterator constIterator;
+    for (constIterator = packagesWithoutSourceCode.constBegin(); constIterator != packagesWithoutSourceCode.constEnd();
+         ++constIterator)
+        qDebug() << (*constIterator) << endl;
 }
 
 void Dot::setRepoEnv(RepoEnv *repoEnv)
@@ -251,7 +375,7 @@ void Dot::updateLocalManifests()
         for (int j = 0; j < dependencyPyramid[i].size(); j++)
         {
             try {
-                processSingleComponent(dependencyPyramid[i][j], tmpComponentsList);
+                processSingleComponent(dependencyPyramid[i][j], tmpComponentsList);     // Process one component, if it needs to be updated, append it to tmpComponentsList
             }
             catch (MyError e) {
                 throw;
@@ -276,10 +400,11 @@ int Dot::pushLocalCommits()
 
             // Push local commits to remote repository
             GitExecutor gitExecutor;
-            ret = gitExecutor.pushInDir(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
-            if (ret != 0) {
-                qDebug() << "Failed to push local commits to remote!";
-                break;
+            try {
+                gitExecutor.push(c.getBranchToCommit(), TMP_COMPONENT_DIR + "/" + c.getName());
+            } catch (MyError e) {
+                e.displayError();
+                return -1;
             }
         }
     }
@@ -306,26 +431,30 @@ int Dot::makePackages()
     return ret;
 }
 
+// Process one component, if it needs to be updated, append it to tmpComponentsList
+
 void Dot::processSingleComponent(Component component, ComponentsList &componentsListNewAdded)
 {
+    // If the component needs to be updated, return the component with new tag, otherwise, return itself.
     Component componentSpecified = componentSpecifiedTo(component);
 
-    // alreadySpecified means this component has been specified to be updated by user
+    // alreadySpecified means the user wants to update the component
     bool alreadySpecified = (componentSpecified.getTag() != component.getTag());
 
-    if (alreadySpecified) {
-        componentSpecified.checkoutToTag();
+    if (alreadySpecified)   // If the user wants to update the component
+    {
+        componentSpecified.checkoutToTag(); // Download the component and checkout to the new tag
 
         // TODO: check if the manifests are same
 
         // Generate its commit message file
-        componentSpecified.generateCommitMessageFileBetweenTags(component.getTag(), componentSpecified.getTag());
+        componentSpecified.generateCommitMessageFileBetweenTags(component.getTag(), componentSpecified.getTag());   // Record the log between old tag and new tag
     }
 
     Component finalComponent;
 
     try {
-        finalComponent = updateSingleManifestIfNeeded(componentSpecified);
+        finalComponent = updateSingleManifestIfNeeded(componentSpecified);  // If the component's dependency needs to be updated, update manifest, commit, create new tag
     }
     catch (MyError e) {
         throw;
@@ -356,18 +485,20 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
 
 }
 
+// If the component's dependency needs to be updated, update manifest, commit, create new tag
+// If the component is specified by user, it's the one with new tag, otherwise, it's the original component
 Component Dot::updateSingleManifestIfNeeded(Component component)
 {
     ComponentsList dependencies = component.getDependencies();
 
-    for (int i = 0; i < dependencies.size(); i++)
+    for (int i = 0; i < dependencies.size(); i++)   // Iterate this component's dependencies
     {
-        Component c = componentSpecifiedTo(dependencies[i]);
+        Component c = componentSpecifiedTo(dependencies[i]);    // If the component is in update list, then return the one with new tag, otherwise, return itself
 
         // If the tag of this component isn't same with that of this component in updated list
-        if (dependencies[i].getTag() != c.getTag()) {
+        if (dependencies[i].getTag() != c.getTag()) {   // So if their tags are different, it means this dependency changes
             int ret;
-            ret = component.updateDependencyInManifest(dependencies[i], c);
+            ret = component.updateDependencyInManifest(dependencies[i], c);     // Pass both old dependency and new dependency
             if (ret != 0) {
                 throw MyError(ret, "updateDependencyInManifest error", __LINE__, __FUNCTION__);
             }

@@ -2,292 +2,164 @@
 #include <QDebug>
 #include <QDir>
 #include "myerror.h"
-
-GitExecutor::GitExecutor()
-{
-    gitRepoAddress = defaultGitRepoAddress;
-}
+#include "cmdexecutor.h"
 
 GitExecutor::GitExecutor(QString gitRepoAddress)
 {
     this->gitRepoAddress = gitRepoAddress;
 }
 
-GitExecutor::~GitExecutor()
-{
-
-}
-
-QStringList GitExecutor::getBranches()
+QStringList GitExecutor::getBranches(QString dir)
 {
     QStringList branches;
-    QStringList origBranches;
+    QStringList cmdOutput;
 
     // Run git branch -a to get all the branches
-    cmd = QString("git branch -a");
+    CmdExecutor cmd("git branch -a");
 
     try {
-        origBranches = executeCmdAndReturnOutput();
+        cmdOutput = cmd.execute(dir);
     }
     catch (MyError e) {
+        e.displayError();
         throw;
     }
 
-    QString b;
-    for (int i = 0; i < origBranches.size(); i++) {
-        b = origBranches.at(i);
+    QString line;
+    for (int i = 0; i < cmdOutput.size(); i++) {
+        line = cmdOutput.at(i);
 
-        // TODO: Check why there are *mater and HEAD->
-
-        if (b.contains("remote") && !b.contains("->") && !b.contains("*")) {
-            branches << b.section('/', 2, 2);
+        if (line.contains("remote") && !line.contains("->") && !line.contains("*")) {
+            branches << line.section('/', 2, 2);
         }
     }
 
     return branches;
 }
 
-QStringList GitExecutor::getBranchesInDir(QString dir)
-{
-    QStringList branches;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
-    }
-    setWorkingDirectory(dir);
-
-    try {
-        branches = getBranches();
-    }
-    catch (MyError e) {
-        throw;
-    }
-
-    return branches;
-}
-
-QString GitExecutor::getCurrentBranch()
+QString GitExecutor::getCurrentBranch(QString dir)
 {
     QString currentBranch = "";
-    QStringList branches;
+    QStringList output;
 
-    // Run git branch to get local branches
-    cmd = QString("git branch");
+    CmdExecutor cmd("git branch");
 
     try {
-        branches = executeCmdAndReturnOutput();
+        output = cmd.execute(dir);
     }
     catch (MyError e) {
+        e.displayError();
         throw;
     }
 
-    for (int i = 0; i < branches.size(); i++) {
-        if (branches[i].contains("*")) {      // The one which contains * is current branch
-            if (branches[i].contains("detached")) {
-                throw MyError(-1, "Not on any branch", __LINE__, __FUNCTION__);
+    for (int i = 0; i < output.size(); i++) {
+        if (output[i].contains("*")) {      // The one which contains * is current branch
+            if (output[i].contains("detached")) {      // If it is in detached status, it's not in any branch, return empty
+                return "";
             }
-            currentBranch = branches[i].section(' ', 1, 1);
+            currentBranch = output[i].section(' ', 1, 1);
         }
     }
 
     return currentBranch;
 }
 
-QString GitExecutor::getCurrentBranchInDir(QString dir)
+void GitExecutor::clone(QString repo, QString dir)
 {
-    QString currentBranch = "";
+    CmdExecutor cmd("git clone " + gitRepoAddress + repo);
 
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
-    }
-    setWorkingDirectory(dir);
+    qDebug() << "git clone " << repo << " ...";
 
     try {
-        currentBranch = getCurrentBranch();
-    }
-    catch (MyError e) {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
         throw;
     }
-
-    return currentBranch;
 }
 
-int GitExecutor::clone(QString repo)
+void GitExecutor::checkout(QString ref, QString dir)
 {
-    int ret = 0;
+    CmdExecutor cmd("git checkout " + ref);
 
-    cmd = QString("git clone %1%2").arg(gitRepoAddress).arg(repo);
-    qDebug() << "Running " << cmd;
-
-    ret = executeCmd();
-
-    return ret;
-}
-
-int GitExecutor::cloneInDir(QString repo, QString dir)
-{
-    int ret = 0;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        return -1;
+    try {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
+        throw;
     }
-    setWorkingDirectory(dir);
-
-    ret = clone(repo);
-
-    return ret;
 }
 
-int GitExecutor::checkout(QString ref)
+void GitExecutor::commit(QString file, QString commitMessageFile, QString dir)
 {
-    int ret = 0;
+    CmdExecutor cmdAdd("git add " + file);
+    CmdExecutor cmdCommit("git commit -F " + commitMessageFile);
 
-    cmd = QString("git checkout %1").arg(ref);
-    qDebug() << "Running " << cmd;
-
-    ret = executeCmd();
-    if (ret < 0) {
-        qDebug() << "Failed to " << cmd;
+    try {
+        cmdAdd.execute(dir);
+        cmdCommit.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
+        throw;
     }
-
-    return ret;
 }
 
-int GitExecutor::checkoutInDir(QString ref, QString dir)
+void GitExecutor::push(QString branch, QString remote, QString dir)
 {
-    int ret = 0;
+    CmdExecutor cmd("git push " + remote + " " + branch + ":" + branch + " --tags");
 
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        return -1;
+    qDebug() << "git push " << branch << " ...";
+
+    try {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
+        throw;
     }
-
-    setWorkingDirectory(dir);
-
-    ret = checkout(ref);
-
-    return ret;
 }
 
-int GitExecutor::commit(QString file, QString commitMessageFile)
+void GitExecutor::fetch(QString dir)
 {
-    int ret = 0;
+    CmdExecutor cmd("git fetch");
 
-    cmd = QString("git add %1").arg(file);
-    qDebug() << "Running " << cmd;
+    qDebug() << "git fetch in " << dir << " ...";
 
-    ret = executeCmd();
-    if (ret != 0)
-        return ret;
-
-    cmd = QString("git commit -F %1").arg(commitMessageFile);
-    qDebug() << "Running " << cmd;
-
-    ret = executeCmd();
-
-    return ret;
-}
-
-int GitExecutor::commitInDir(QString file, QString commitMessageFile, QString dir)
-{
-    int ret = 0;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        return -1;
+    try {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
+        throw;
     }
-
-    setWorkingDirectory(dir);
-
-    ret = commit(file, commitMessageFile);
-
-    return ret;
 }
 
-int GitExecutor::push(QString branch)
+void GitExecutor::tag(QString newTag, QString dir)
 {
-    int ret = 0;
+    CmdExecutor cmd("git tag " + newTag);
 
-    // TODO: use an argument to substitute origin
-
-    cmd = QString("git push origin %1:%1 --tags").arg(branch);
-    qDebug() << "Running " << cmd;
-
-    ret = executeCmd();
-
-    return ret;
-}
-
-int GitExecutor::pushInDir(QString branch, QString dir)
-{
-    int ret = 0;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        return -1;
+    try {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
+        throw;
     }
-
-    setWorkingDirectory(dir);
-
-    ret = push(branch);
-
-    return ret;
 }
 
-int GitExecutor::tag(QString newTag)
+QString GitExecutor::getLog(QString oldTag, QString newTag, QString dir)
 {
-    int ret = 0;
-
-    cmd = QString("git tag %1").arg(newTag);
-    qDebug() << "Running " << cmd;
-
-    ret = executeCmd();
-
-    return ret;
-}
-
-int GitExecutor::tagInDir(QString newTag, QString dir)
-{
-    int ret = 0;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        return -1;
-    }
-
-    setWorkingDirectory(dir);
-
-    ret = tag(newTag);
-
-    return ret;
-}
-
-QString GitExecutor::getLog(QString oldTag, QString newTag)
-{
-    QStringList origLogs;
+    QStringList output;
     QString log = "";
 
-    cmd = QString("git log --oneline --no-merges %1..%2").arg(oldTag).arg(newTag);
+    CmdExecutor cmd("git log --oneline --no-merges " + oldTag + ".." + newTag);
 
     try {
-        origLogs = executeCmdAndReturnOutput();
-    }
-    catch (MyError e) {
+        cmd.execute(dir);
+    } catch (MyError e) {
+        e.displayError();
         throw;
     }
 
-    for (int i = 0; i < origLogs.size(); i++) {
-        log = origLogs[i];
+    for (int i = 0; i < output.size(); i++) {
+        log = output[i];
 
         if (!log.isEmpty()) {
             break;
@@ -295,30 +167,4 @@ QString GitExecutor::getLog(QString oldTag, QString newTag)
     }
 
     return log;
-}
-
-QString GitExecutor::getLogInDir(QString oldTag, QString newTag, QString dir)
-{
-    QString log;
-
-    QDir d(dir);
-    if (!d.exists()) {
-        qDebug() << dir << "doesn't exist";
-        throw MyError(-1, dir + "doesn't exist", __LINE__, __FUNCTION__);
-    }
-    setWorkingDirectory(dir);
-
-    try {
-        log = getLog(oldTag, newTag);
-    }
-    catch (MyError e) {
-        throw;
-    }
-
-    return log;
-}
-
-void GitExecutor::setCmd(QString cmd)
-{
-    cmd = "git " + cmd;     // not used for now
 }

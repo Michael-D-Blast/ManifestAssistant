@@ -60,8 +60,13 @@ int FileEditor::updateValueInLinesContainingKeyword(const QString &oldValue, con
     QString cmd = QString("sed -i {/%1/s/%2/%3/} %4").arg(keyword).arg(oldValue).arg(newValue).arg(file);
     qDebug() << "Running " << cmd;
 
-    CmdExecutor cmdExecutor;
-    cmdExecutor.setCmd(cmd);
+    CmdExecutor c(cmd);
+    try {
+        c.execute();
+    } catch (MyError e) {
+        e.displayError();
+        return -1;
+    }
 
-    return(cmdExecutor.executeCmd());
+    return 0;
 }
