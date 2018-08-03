@@ -1,0 +1,263 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BACKENDTHREAD_H	backendthread.h	2;"	d
+BRANCHDIALOG_H	branchdialog.h	2;"	d
+BackendThread	backendthread.cpp	/^BackendThread::BackendThread()$/;"	f	class:BackendThread
+BackendThread	backendthread.h	/^class BackendThread:public QThread$/;"	c
+BranchDialog	branchdialog.cpp	/^BranchDialog::BranchDialog(QString component, QWidget *parent) :$/;"	f	class:BranchDialog
+BranchDialog	branchdialog.h	/^class BranchDialog : public QDialog$/;"	c
+CMDEXECUTOR_H	cmdexecutor.h	2;"	d
+CMD_TIMEOUT_IN_MS	cmdexecutor.h	/^const unsigned int CMD_TIMEOUT_IN_MS = 10 * 60 * 1000;$/;"	v
+COMPONENTDIR_H	componentdir.h	2;"	d
+COMPONENTPKGDIR_H	componentpkgdir.h	2;"	d
+COMPONENTSRCDIR_H	componentsrcdir.h	2;"	d
+COMPONENTS_MAX_NUM	dialog.h	17;"	d
+COMPONENT_H	component.h	2;"	d
+CmdExecutor	cmdexecutor.cpp	/^CmdExecutor::CmdExecutor(QString command)$/;"	f	class:CmdExecutor
+CmdExecutor	cmdexecutor.h	/^class CmdExecutor : public QProcess$/;"	c
+Component	component.cpp	/^Component::Component()$/;"	f	class:Component
+Component	component.cpp	/^Component::Component(QString nameOfComponent)$/;"	f	class:Component
+Component	component.cpp	/^Component::Component(QString nameOfComponent, QString tagOfComponent)$/;"	f	class:Component
+Component	component.h	/^class Component$/;"	c
+ComponentDir	componentdir.cpp	/^ComponentDir::ComponentDir(QString workspacePath, QString componentName, QString componentTag) :$/;"	f	class:ComponentDir
+ComponentDir	componentdir.h	/^class ComponentDir : public Component, public QDir$/;"	c
+ComponentInputter	dialog.h	/^    struct ComponentInputter {$/;"	s	class:Dialog
+ComponentPkgDir	componentpkgdir.cpp	/^ComponentPkgDir::ComponentPkgDir(QString workspacePath, QString componentName, QString componentTag) :$/;"	f	class:ComponentPkgDir
+ComponentPkgDir	componentpkgdir.h	/^class ComponentPkgDir : public ComponentDir$/;"	c
+ComponentSrcDir	componentsrcdir.cpp	/^ComponentSrcDir::ComponentSrcDir(QString workspacePath, QString componentName, QString componentTag) :$/;"	f	class:ComponentSrcDir
+ComponentSrcDir	componentsrcdir.h	/^class ComponentSrcDir : public ComponentDir$/;"	c
+ComponentsList	component.h	/^typedef QList<class Component> ComponentsList;$/;"	t
+ComponentsMesh	component.h	/^typedef QList<ComponentsList> ComponentsMesh;$/;"	t
+DEFAULT_GIT_REPO_ADDRESS	gitexecutor.h	/^static const QString DEFAULT_GIT_REPO_ADDRESS = "git@git.abbszswrd.com:TerraZ63_ARM\/";$/;"	v
+DEFAULT_ROOT_COMPONENT	dot.cpp	/^static const QString DEFAULT_ROOT_COMPONENT = "Esmeralda";$/;"	v	file:
+DIALOG_H	dialog.h	2;"	d
+DOT_H	dot.h	2;"	d
+DependencyPair	dot.cpp	/^DependencyPair::DependencyPair()$/;"	f	class:DependencyPair
+DependencyPair	dot.h	/^class DependencyPair {$/;"	c
+Dialog	dialog.cpp	/^Dialog::Dialog(QWidget *parent) :$/;"	f	class:Dialog
+Dialog	dialog.h	/^class Dialog : public QDialog$/;"	c
+Dot	dot.cpp	/^Dot::Dot()$/;"	f	class:Dot
+Dot	dot.h	/^class Dot : public QObject$/;"	c
+FILEEDITOR_H	fileeditor.h	2;"	d
+FileEditor	fileeditor.cpp	/^FileEditor::FileEditor()$/;"	f	class:FileEditor
+FileEditor	fileeditor.cpp	/^FileEditor::FileEditor(QString file)$/;"	f	class:FileEditor
+FileEditor	fileeditor.h	/^class FileEditor$/;"	c
+GITEXECUTOR_H	gitexecutor.h	2;"	d
+GitExecutor	gitexecutor.cpp	/^GitExecutor::GitExecutor(QString gitRepoAddress)$/;"	f	class:GitExecutor
+GitExecutor	gitexecutor.h	/^class GitExecutor$/;"	c
+LOCALCOMMITSCHECKDIALOG_H	localcommitscheckdialog.h	2;"	d
+LOCAL_COMMIT_DIR	localcommitscheckdialog.cpp	/^static const QString LOCAL_COMMIT_DIR = "\/tmp\/components";$/;"	v	file:
+LocalCommitsCheckDialog	localcommitscheckdialog.cpp	/^LocalCommitsCheckDialog::LocalCommitsCheckDialog(QWidget *parent) :$/;"	f	class:LocalCommitsCheckDialog
+LocalCommitsCheckDialog	localcommitscheckdialog.h	/^class LocalCommitsCheckDialog : public QDialog$/;"	c
+MANIFESTEDITOR_H	manifesteditor.h	2;"	d
+MT_COMPONENT_OPTS_KEYWORD	repoenv.cpp	/^const QString MT_COMPONENT_OPTS_KEYWORD = "MT_COMPONENT_OPTS";$/;"	v
+MYERROR_H	myerror.h	2;"	d
+MY_DEBUG	main.cpp	12;"	d	file:
+ManifestEditor	manifesteditor.cpp	/^ManifestEditor::ManifestEditor()$/;"	f	class:ManifestEditor
+ManifestEditor	manifesteditor.cpp	/^ManifestEditor::ManifestEditor(QString workdir, QString component) :$/;"	f	class:ManifestEditor
+ManifestEditor	manifesteditor.h	/^class ManifestEditor : public FileEditor$/;"	c
+MyError	myerror.cpp	/^MyError::MyError()$/;"	f	class:MyError
+MyError	myerror.cpp	/^MyError::MyError(int ret, QString msg = "unset", int line = -1, QString func = "unset")$/;"	f	class:MyError
+MyError	myerror.h	/^class MyError$/;"	c
+PACKAGES_SOURCE_CODES_DIR	dot.cpp	/^const QString PACKAGES_SOURCE_CODES_DIR = "\/home\/abb\/packages_source_codes\/";$/;"	v
+PACKAGES_WITHOUT_SOURCE_CODE_FILE	dot.cpp	/^const QString PACKAGES_WITHOUT_SOURCE_CODE_FILE = "packages_without_source_code";$/;"	v
+PKG	repoenv.h	/^    PKG,$/;"	e	enum:PackageSource
+PUSHTHREAD_H	pushthread.h	2;"	d
+PackageSource	repoenv.h	/^enum PackageSource {$/;"	g
+PushThread	pushthread.cpp	/^PushThread::PushThread()$/;"	f	class:PushThread
+PushThread	pushthread.h	/^class PushThread : public QThread$/;"	c
+REPOENV_H	repoenv.h	2;"	d
+REPOEXECUTOR_H	repoexecutor.h	2;"	d
+REPOMANIFEST_H	repomanifest.h	2;"	d
+RepoEnv	repoenv.cpp	/^RepoEnv::RepoEnv(QString filePath)$/;"	f	class:RepoEnv
+RepoEnv	repoenv.h	/^class RepoEnv$/;"	c
+RepoExecutor	repoexecutor.cpp	/^RepoExecutor::RepoExecutor()$/;"	f	class:RepoExecutor
+RepoExecutor	repoexecutor.h	/^class RepoExecutor$/;"	c
+RepoManifest	repomanifest.cpp	/^RepoManifest::RepoManifest(QString fileDir) :$/;"	f	class:RepoManifest
+RepoManifest	repomanifest.h	/^class RepoManifest : public QFile, public FileEditor$/;"	c
+SRC	repoenv.h	/^    SRC,$/;"	e	enum:PackageSource
+TAGLINEEDIT_H	taglineedit.h	2;"	d
+TMP_COMPONENT_DIR	component.h	/^static const QString TMP_COMPONENT_DIR = "\/tmp\/components";$/;"	v
+TagLineEdit	taglineedit.cpp	/^TagLineEdit::TagLineEdit(ComponentsList *components, QWidget *parent) :$/;"	f	class:TagLineEdit
+TagLineEdit	taglineedit.h	/^class TagLineEdit : public QLineEdit$/;"	c
+WORKSPACE_DIR	dot.cpp	/^static const QString WORKSPACE_DIR = "\/home\/abb\/mtws\/";$/;"	v	file:
+WORKSPACE_H	workspace.h	2;"	d
+Workspace	workspace.cpp	/^Workspace::Workspace(QString path) :$/;"	f	class:Workspace
+Workspace	workspace.h	/^class Workspace : public QDir$/;"	c
+allComponentsList	dot.h	/^    ComponentsList allComponentsList;   \/\/ used for items in combox$/;"	m	class:Dot
+appendDependency	component.cpp	/^void Component::appendDependency(ComponentsList dependencies)$/;"	f	class:Component
+backendThread	dialog.h	/^    BackendThread backendThread;$/;"	m	class:Dialog
+backendThreadFinished	dialog.cpp	/^void Dialog::backendThreadFinished()$/;"	f	class:Dialog
+branch	branchdialog.h	/^    QString branch;$/;"	m	class:BranchDialog
+branchInputInDialog	dot.h	/^    QString branchInputInDialog;    \/\/ We use it to give branch got from dialog to backend thread$/;"	m	class:Dot
+branchToCommit	component.h	/^    QString branchToCommit; \/\/ The branch we want to commit$/;"	m	class:Component
+branches	component.h	/^    QStringList branches;   \/\/ All branches this component has, obsolete$/;"	m	class:Component
+btn	localcommitscheckdialog.h	/^    QPushButton *btn;$/;"	m	class:LocalCommitsCheckDialog
+btnClicked	localcommitscheckdialog.cpp	/^void LocalCommitsCheckDialog::btnClicked()$/;"	f	class:LocalCommitsCheckDialog
+canMakePkg	componentsrcdir.cpp	/^bool ComponentSrcDir::canMakePkg() const$/;"	f	class:ComponentSrcDir
+checkout	gitexecutor.cpp	/^void GitExecutor::checkout(QString ref, QString dir)$/;"	f	class:GitExecutor
+checkoutToTag	component.cpp	/^int Component::checkoutToTag()$/;"	f	class:Component
+child	dot.h	/^    Component child;$/;"	m	class:DependencyPair
+clone	gitexecutor.cpp	/^void GitExecutor::clone(QString repo, QString dir)$/;"	f	class:GitExecutor
+cmd	cmdexecutor.h	/^    QString cmd;$/;"	m	class:CmdExecutor
+combo	branchdialog.h	/^    QComboBox *combo;$/;"	m	class:BranchDialog
+commit	gitexecutor.cpp	/^void GitExecutor::commit(QString file, QString commitMessageFile, QString dir)$/;"	f	class:GitExecutor
+commitChangeOfManifest	component.cpp	/^int Component::commitChangeOfManifest()$/;"	f	class:Component
+complete	main.cpp	/^QMutex complete;$/;"	v
+componentChanged	taglineedit.cpp	/^void TagLineEdit::componentChanged(int index)$/;"	f	class:TagLineEdit
+componentInputIsValid	dialog.cpp	/^bool Dialog::componentInputIsValid(Component component)$/;"	f	class:Dialog
+componentInputters	dialog.h	/^    struct ComponentInputter componentInputters[COMPONENTS_MAX_NUM];$/;"	m	class:Dialog	typeref:struct:Dialog::ComponentInputter
+componentName	dialog.h	/^    QLabel *componentName;$/;"	m	class:Dialog
+componentNeedsBranch	dot.h	/^    QString componentNeedsBranch;   \/\/ We use it to give component name to branch dialog$/;"	m	class:Dot
+componentSpecifiedTo	dot.cpp	/^Component Dot::componentSpecifiedTo(Component component)$/;"	f	class:Dot
+componentTag	dialog.h	/^    QLabel *componentTag;$/;"	m	class:Dialog
+components	dialog.h	/^    ComponentsList components;      \/\/ Store the components information, get them from dot.$/;"	m	class:Dialog
+components	taglineedit.h	/^    ComponentsList *components;$/;"	m	class:TagLineEdit
+componentsToUpdate	dot.h	/^    ComponentsList componentsToUpdate;$/;"	m	class:Dot
+creatNewTag	component.cpp	/^int Component::creatNewTag()$/;"	f	class:Component
+createTmpDir	backendthread.cpp	/^int BackendThread::createTmpDir()$/;"	f	class:BackendThread
+dependencies	component.h	/^    ComponentsList dependencies;   \/\/ Just record the component's name, because we don't care the tag in dependencies$/;"	m	class:Component
+dependencyPyramid	dot.h	/^    ComponentsMesh dependencyPyramid;       \/\/ Component pyramid from componentsGroup$/;"	m	class:Dot
+dependencyTree	dot.h	/^    QList<DependencyPair> dependencyTree;   \/\/ Pair information read from .dot file$/;"	m	class:Dot
+displayComponentsToUpdate	dot.cpp	/^void Dot::displayComponentsToUpdate() const$/;"	f	class:Dot
+displayDependencies	component.cpp	/^void Component::displayDependencies() const$/;"	f	class:Component
+displayDependencyPyramid	dot.cpp	/^void Dot::displayDependencyPyramid() const$/;"	f	class:Dot
+displayDependencyTree	dot.cpp	/^void Dot::displayDependencyTree()$/;"	f	class:Dot
+displayError	myerror.cpp	/^void MyError::displayError() const$/;"	f	class:MyError
+displayPackagesWithoutSourceCode	dot.cpp	/^void Dot::displayPackagesWithoutSourceCode() const$/;"	f	class:Dot
+dot	backendthread.h	/^    Dot *dot;$/;"	m	class:BackendThread
+dot	dialog.h	/^    Dot dot;$/;"	m	class:Dialog
+dot	pushthread.h	/^    Dot *dot;$/;"	m	class:PushThread
+dotFile	dot.h	/^    QFile dotFile;$/;"	m	class:Dot
+envData	repoenv.h	/^    QHash<QString, PackageSource> *envData;$/;"	m	class:RepoEnv
+envFile	repoenv.h	/^    QFile *envFile;$/;"	m	class:RepoEnv
+execute	cmdexecutor.cpp	/^QStringList CmdExecutor::execute(QString dir, unsigned int timeoutInMs)$/;"	f	class:CmdExecutor
+fetch	gitexecutor.cpp	/^void GitExecutor::fetch(QString dir)$/;"	f	class:GitExecutor
+fetchSourceCodesOfPackages	dot.cpp	/^int Dot::fetchSourceCodesOfPackages()$/;"	f	class:Dot
+file	fileeditor.h	/^    QString file;$/;"	m	class:FileEditor
+func	myerror.h	/^    QString func;$/;"	m	class:MyError
+generateAllComponentsList	dot.cpp	/^void Dot::generateAllComponentsList()$/;"	f	class:Dot
+generateCommitMessageFileBetweenTags	component.cpp	/^int Component::generateCommitMessageFileBetweenTags(QString oldTag, QString newTag)$/;"	f	class:Component
+generateDependencyPyramid	dot.cpp	/^void Dot::generateDependencyPyramid()$/;"	f	class:Dot
+generateDependencyPyramidLevel0	dot.cpp	/^void Dot::generateDependencyPyramidLevel0()$/;"	f	class:Dot
+generatePackagesWithoutSourceCode	dot.cpp	/^int Dot::generatePackagesWithoutSourceCode()$/;"	f	class:Dot
+getAllComponentsList	dot.cpp	/^ComponentsList Dot::getAllComponentsList()$/;"	f	class:Dot
+getBranch	branchdialog.cpp	/^QString BranchDialog::getBranch() const$/;"	f	class:BranchDialog
+getBranchToCommit	component.cpp	/^QString Component::getBranchToCommit() const$/;"	f	class:Component
+getBranches	gitexecutor.cpp	/^QStringList GitExecutor::getBranches(QString dir)$/;"	f	class:GitExecutor
+getBuildInManifest	manifesteditor.cpp	/^QString ManifestEditor::getBuildInManifest() const$/;"	f	class:ManifestEditor
+getChild	dot.cpp	/^Component DependencyPair::getChild() const$/;"	f	class:DependencyPair
+getChildPosInLevel	dot.cpp	/^int Dot::getChildPosInLevel(int pairIndex, int level)$/;"	f	class:Dot
+getComponentDependenciesFromDependencyTree	dot.cpp	/^ComponentsList Dot::getComponentDependenciesFromDependencyTree(QString component)$/;"	f	class:Dot
+getCurrentBranch	gitexecutor.cpp	/^QString GitExecutor::getCurrentBranch(QString dir)$/;"	f	class:GitExecutor
+getDependencies	component.cpp	/^ComponentsList Component::getDependencies()$/;"	f	class:Component
+getList	repoexecutor.cpp	/^ComponentsList RepoExecutor::getList(QString dir)$/;"	f	class:RepoExecutor
+getLog	gitexecutor.cpp	/^QStringList GitExecutor::getLog(QString oldTag, QString newTag, QString dir)$/;"	f	class:GitExecutor
+getName	component.cpp	/^QString Component::getName() const$/;"	f	class:Component
+getParent	dot.cpp	/^Component DependencyPair::getParent() const$/;"	f	class:DependencyPair
+getParentPosInLevel	dot.cpp	/^int Dot::getParentPosInLevel(int pairIndex, int level)$/;"	f	class:Dot
+getResult	backendthread.cpp	/^int BackendThread::getResult() const$/;"	f	class:BackendThread
+getResult	pushthread.cpp	/^int PushThread::getResult() const$/;"	f	class:PushThread
+getTag	component.cpp	/^QString Component::getTag() const$/;"	f	class:Component
+getValueOfKey	fileeditor.cpp	/^QString FileEditor::getValueOfKey(QString key, QChar sep) const$/;"	f	class:FileEditor
+getVersionInManifest	manifesteditor.cpp	/^QString ManifestEditor::getVersionInManifest() const$/;"	f	class:ManifestEditor
+getWorkspacePath	componentdir.cpp	/^QString ComponentDir::getWorkspacePath() const$/;"	f	class:ComponentDir
+gitRepoAddress	gitexecutor.h	/^    QString gitRepoAddress;$/;"	m	class:GitExecutor
+gridLayout	dialog.h	/^    QGridLayout *gridLayout;$/;"	m	class:Dialog
+hasSourceCode	component.cpp	/^bool Component::hasSourceCode(const QStringList &packagesWithoutSourceCode) const$/;"	f	class:Component
+init	componentdir.cpp	/^void ComponentDir::init()$/;"	f	class:ComponentDir
+init	componentpkgdir.cpp	/^void ComponentPkgDir::init()$/;"	f	class:ComponentPkgDir
+init	componentsrcdir.cpp	/^void ComponentSrcDir::init()$/;"	f	class:ComponentSrcDir
+insertPairChildToPyramidLevel	dot.cpp	/^void Dot::insertPairChildToPyramidLevel(int pairIndex, int level)$/;"	f	class:Dot
+instruction	branchdialog.h	/^    QLabel *instruction;$/;"	m	class:BranchDialog
+is	component.cpp	/^bool Component::is(Component anotherComponent)$/;"	f	class:Component
+isPackage	component.cpp	/^bool Component::isPackage(const RepoEnv *repoEnv) const$/;"	f	class:Component
+isPackage	repoenv.cpp	/^bool RepoEnv::isPackage(QString component) const$/;"	f	class:RepoEnv
+isPackageWithoutSourceCode	component.cpp	/^bool Component::isPackageWithoutSourceCode(const RepoEnv *repoEnv, const QStringList &packagesWithoutSourceCode) const$/;"	f	class:Component
+isReusable	workspace.cpp	/^bool Workspace::isReusable() const$/;"	f	class:Workspace
+label	dialog.h	/^    QLabel *label;$/;"	m	class:Dialog
+line	myerror.h	/^    int line;$/;"	m	class:MyError
+main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
+makePackage	componentdir.cpp	/^void ComponentDir::makePackage()$/;"	f	class:ComponentDir
+makePackage	componentpkgdir.cpp	/^void ComponentPkgDir::makePackage()$/;"	f	class:ComponentPkgDir
+makePackage	componentsrcdir.cpp	/^void ComponentSrcDir::makePackage()$/;"	f	class:ComponentSrcDir
+makePackages	dot.cpp	/^int Dot::makePackages()$/;"	f	class:Dot
+makeSinglePackage	dot.cpp	/^int Dot::makeSinglePackage(Component component)$/;"	f	class:Dot
+msg	myerror.h	/^    QString msg;$/;"	m	class:MyError
+name	component.h	/^    QString name;$/;"	m	class:Component
+name	dialog.h	/^        QComboBox *name;$/;"	m	struct:Dialog::ComponentInputter
+needToBeUpdated	component.cpp	/^bool Component::needToBeUpdated() const$/;"	f	class:Component
+needUpdated	component.h	/^    bool needUpdated;    \/\/ If it true, the component should be pushed to remote. Default value is false$/;"	m	class:Component
+oKClicked	dialog.cpp	/^void Dialog::oKClicked()$/;"	f	class:Dialog
+ok	branchdialog.h	/^    QPushButton *ok;$/;"	m	class:BranchDialog
+ok	dialog.h	/^    QPushButton *ok;$/;"	m	class:Dialog
+packagesWithoutSourceCode	dot.h	/^    QStringList packagesWithoutSourceCode;$/;"	m	class:Dot
+parent	dot.h	/^    Component parent;$/;"	m	class:DependencyPair
+parseComponentOpts	repoenv.cpp	/^int RepoEnv::parseComponentOpts(QString componentOpts)$/;"	f	class:RepoEnv
+parseDependencyTree	dot.cpp	/^bool Dot::parseDependencyTree()$/;"	f	class:Dot
+processLineOfDependencyTree	dot.cpp	/^void Dot::processLineOfDependencyTree(QString line)$/;"	f	class:Dot
+processSingleComponent	dot.cpp	/^void Dot::processSingleComponent(Component component, ComponentsList &componentsListNewAdded)$/;"	f	class:Dot
+prompt	localcommitscheckdialog.h	/^    QLabel *prompt;$/;"	m	class:LocalCommitsCheckDialog
+push	gitexecutor.cpp	/^void GitExecutor::push(QString branch, QString dir, QString remote)$/;"	f	class:GitExecutor
+pushLocalCommits	dot.cpp	/^int Dot::pushLocalCommits()$/;"	f	class:Dot
+pushThread	dialog.h	/^    PushThread pushThread;$/;"	m	class:Dialog
+pushThreadFinished	dialog.cpp	/^void Dialog::pushThreadFinished()$/;"	f	class:Dialog
+removeChildIfInUpperLevel	dot.cpp	/^void Dot::removeChildIfInUpperLevel(int pairIndex, int level)$/;"	f	class:Dot
+removeOldComponentInUpdateList	dot.cpp	/^void Dot::removeOldComponentInUpdateList(QString componentName)$/;"	f	class:Dot
+repoEnv	dot.h	/^    RepoEnv *repoEnv;           \/\/ makePackages needs this information to know if a component is package$/;"	m	class:Dot
+repoManifest	componentdir.h	/^    RepoManifest *repoManifest;$/;"	m	class:ComponentDir
+responseBranchDialog	dialog.cpp	/^void Dialog::responseBranchDialog()$/;"	f	class:Dialog
+result	backendthread.h	/^    int result;$/;"	m	class:BackendThread
+result	pushthread.h	/^    int result;$/;"	m	class:PushThread
+ret	myerror.h	/^    int ret;$/;"	m	class:MyError
+reusable	workspace.h	/^    bool reusable;$/;"	m	class:Workspace
+rootComponent	dot.h	/^    QString rootComponent;      \/\/ The entry component of the product, default is Esmeralda$/;"	m	class:Dot
+run	backendthread.cpp	/^void BackendThread::run()$/;"	f	class:BackendThread
+run	pushthread.cpp	/^void PushThread::run()$/;"	f	class:PushThread
+saveBranch	branchdialog.cpp	/^void BranchDialog::saveBranch()$/;"	f	class:BranchDialog
+setBranchToCommit	component.cpp	/^void Component::setBranchToCommit(QString branchToCommit)$/;"	f	class:Component
+setBranches	component.cpp	/^void Component::setBranches(QStringList branches)$/;"	f	class:Component
+setChild	dot.cpp	/^void DependencyPair::setChild(QString name, QString tag)$/;"	f	class:DependencyPair
+setComboxItems	dialog.cpp	/^void Dialog::setComboxItems()$/;"	f	class:Dialog
+setCommitMessageOfDependency	component.cpp	/^int Component::setCommitMessageOfDependency(Component oldDependency, Component newDependency)$/;"	f	class:Component
+setComponentToUpdate	dot.cpp	/^void Dot::setComponentToUpdate(Component componentToUpdate)$/;"	f	class:Dot
+setDependenciesForPyramid	dot.cpp	/^void Dot::setDependenciesForPyramid()$/;"	f	class:Dot
+setDot	backendthread.cpp	/^void BackendThread::setDot(Dot *dot)$/;"	f	class:BackendThread
+setDot	pushthread.cpp	/^void PushThread::setDot(Dot *dot)$/;"	f	class:PushThread
+setFile	dot.cpp	/^void Dot::setFile(QString file)$/;"	f	class:Dot
+setName	component.cpp	/^void Component::setName(QString name)$/;"	f	class:Component
+setParent	dot.cpp	/^void DependencyPair::setParent(QString name, QString tag)$/;"	f	class:DependencyPair
+setRepoEnv	dot.cpp	/^void Dot::setRepoEnv(RepoEnv *repoEnv)$/;"	f	class:Dot
+setTag	component.cpp	/^void Component::setTag(QString tag)$/;"	f	class:Component
+setUpdated	component.cpp	/^void Component::setUpdated(bool yn)$/;"	f	class:Component
+tag	component.h	/^    QString tag;$/;"	m	class:Component
+tag	dialog.h	/^        TagLineEdit *tag;$/;"	m	struct:Dialog::ComponentInputter
+tag	gitexecutor.cpp	/^void GitExecutor::tag(QString newTag, QString dir)$/;"	f	class:GitExecutor
+updateBuild	manifesteditor.cpp	/^int ManifestEditor::updateBuild(const QString newBuild)$/;"	f	class:ManifestEditor
+updateBuildInManifest	component.cpp	/^int Component::updateBuildInManifest()$/;"	f	class:Component
+updateComponentTagInUpdateList	dot.cpp	/^void Dot::updateComponentTagInUpdateList(Component component)$/;"	f	class:Dot
+updateDependency	repomanifest.cpp	/^void RepoManifest::updateDependency(QString dependencyName, QString newTag)$/;"	f	class:RepoManifest
+updateDependency	repomanifest.cpp	/^void RepoManifest::updateDependency(QString dependencyName, QString oldTag, QString newTag)$/;"	f	class:RepoManifest
+updateDependencyTag	manifesteditor.cpp	/^int ManifestEditor::updateDependencyTag(const QString &oldTag, const QString &newTag, const QString &dependency)$/;"	f	class:ManifestEditor
+updateLocalManifests	dot.cpp	/^void Dot::updateLocalManifests()$/;"	f	class:Dot
+updateSingleManifestIfNeeded	dot.cpp	/^Component Dot::updateSingleManifestIfNeeded(Component component)$/;"	f	class:Dot
+updateTag	component.cpp	/^void Component::updateTag(void)$/;"	f	class:Component
+updateTag	dot.cpp	/^QString Dot::updateTag(const QString &tag)$/;"	f	class:Dot
+updateValueInLinesContainingKeyword	fileeditor.cpp	/^int FileEditor::updateValueInLinesContainingKeyword(const QString &oldValue, const QString &newValue, const QString &keyword)$/;"	f	class:FileEditor
+updateVersionTo	repomanifest.cpp	/^void RepoManifest::updateVersionTo(QString newVersion)$/;"	f	class:RepoManifest
+vLayout	branchdialog.h	/^    QVBoxLayout *vLayout;$/;"	m	class:BranchDialog
+vLayout	localcommitscheckdialog.h	/^    QVBoxLayout *vLayout;$/;"	m	class:LocalCommitsCheckDialog
+waitCondition	main.cpp	/^QWaitCondition waitCondition;$/;"	v
+workingDir	dot.h	/^    QString workingDir;     \/\/ The working dir$/;"	m	class:Dot
+workspace	componentdir.h	/^    Workspace *workspace;$/;"	m	class:ComponentDir
+~BranchDialog	branchdialog.cpp	/^BranchDialog::~BranchDialog()$/;"	f	class:BranchDialog
+~Component	component.cpp	/^Component::~Component()$/;"	f	class:Component
+~ComponentDir	componentdir.cpp	/^ComponentDir::~ComponentDir()$/;"	f	class:ComponentDir
+~DependencyPair	dot.cpp	/^DependencyPair::~DependencyPair()$/;"	f	class:DependencyPair
+~Dialog	dialog.cpp	/^Dialog::~Dialog()$/;"	f	class:Dialog
+~FileEditor	fileeditor.cpp	/^FileEditor::~FileEditor()$/;"	f	class:FileEditor
+~LocalCommitsCheckDialog	localcommitscheckdialog.cpp	/^LocalCommitsCheckDialog::~LocalCommitsCheckDialog()$/;"	f	class:LocalCommitsCheckDialog

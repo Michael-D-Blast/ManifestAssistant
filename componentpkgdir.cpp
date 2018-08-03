@@ -34,7 +34,7 @@ void ComponentPkgDir::makePackage()
     qDebug() << "Making package " << getName() << " (no source code)";
 
     CmdExecutor tar(QString("tar -czf %1-%2.rpk %3").arg(getName()).arg(getTag()).arg(getName()));
-    CmdExecutor curl(QString("curl -T ftp://abbgit:abb@ftp.abbszswrd.com %1-%2.rpk").arg(getName()).arg(getTag()));
+    CmdExecutor curl(QString("curl -T %1-%2.rpk ftp://abbgit:abb@ftp.abbszswrd.com").arg(getName()).arg(getTag()));
 
     try
     {

@@ -21,7 +21,11 @@ void ComponentSrcDir::init()
 
     try
     {
-        if (!exists())
+        if (exists())
+        {
+            git.fetch(getWorkspacePath() + "/" + getName());
+        }
+        else
         {
             git.clone(getName(), getWorkspacePath());
         }
@@ -38,6 +42,8 @@ void ComponentSrcDir::init()
 void ComponentSrcDir::makePackage()
 {
     qDebug() << "Making package " << getName() << " (has source code)";
+
+    // TODO: this command takes too long, display the process to a status window
 
     CmdExecutor cmd(QString("jbuild -c -T %1 %2").arg(getName()).arg(getTag()));
     try {

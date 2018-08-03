@@ -104,35 +104,28 @@ int Dot::fetchSourceCodesOfPackages()
     if (!dir.exists())
         dir.mkpath(PACKAGES_SOURCE_CODES_DIR);
 
-    for (int i = 0; i < dependencyPyramid.size(); i++) {
-        for (int j = 0; j < dependencyPyramid[i].size(); j++) {
-            QString component = dependencyPyramid[i][j].getName();
+    try
+    {
+        ComponentSrcDir build(PACKAGES_SOURCE_CODES_DIR, "Build", "sz");
+        build.init();
 
-            if (repoEnv->isPackage(component)) {        // If this is a package
-                QDir componentDir(PACKAGES_SOURCE_CODES_DIR + "/" + component);
-
-                if (packagesWithoutSourceCode.contains(component))  // If this package doesn't have source code
-                    continue;   // Ignore it
-
-                if (componentDir.exists()) {  // If the source code of the package has already been downloaded
-                    GitExecutor git;
-                    try {
-                        git.fetch(PACKAGES_SOURCE_CODES_DIR + "/" + component);   // Fetch the latest codes
-                    } catch (MyError e) {
-                        e.displayError();
-                        throw;
-                    }
-                } else {        // If its source code hasn't been downloaded
-                    GitExecutor git;
-                    try {
-                        git.clone(component, PACKAGES_SOURCE_CODES_DIR);    // Git clone the source code
-                    } catch (MyError e) {
-                        e.displayError();
-                        throw;
-                    }
+        for (int i = 0; i < dependencyPyramid.size(); i++)
+        {
+            for (int j = 0; j < dependencyPyramid[i].size(); j++)
+            {
+                Component dependency = dependencyPyramid[i][j];
+                if (dependency.isPackage(repoEnv) && dependency.hasSourceCode(packagesWithoutSourceCode))
+                {
+                    ComponentSrcDir dependencyDir(PACKAGES_SOURCE_CODES_DIR, dependency.getName(), dependency.getTag());
+                    dependencyDir.init();
                 }
             }
         }
+    }
+    catch (MyError e)
+    {
+        e.displayError();
+        throw;
     }
 }
 
@@ -415,24 +408,7 @@ int Dot::pushLocalCommits()
                     return -1;
                 }
             }
-        }
-    }
 
-    return ret;
-}
-
-int Dot::makePackages()
-{
-    int ret = 0;
-
-    qDebug() << "Creating packages ...";
-    Component c;
-
-    for (int i = 0; i < componentsToUpdate.size(); i++)
-    {
-        c = componentsToUpdate[i];
-        if (c.needToBeUpdated())
-        {
             if (c.isPackage(repoEnv))
             {
                 makeSinglePackage(c);
@@ -442,6 +418,28 @@ int Dot::makePackages()
 
     return ret;
 }
+
+//int Dot::makePackages()
+//{
+//    int ret = 0;
+
+//    qDebug() << "Creating packages ...";
+//    Component c;
+
+//    for (int i = 0; i < componentsToUpdate.size(); i++)
+//    {
+//        c = componentsToUpdate[i];
+//        if (c.needToBeUpdated())
+//        {
+//            if (c.isPackage(repoEnv))
+//            {
+//                makeSinglePackage(c);
+//            }
+//        }
+//    }
+
+//    return ret;
+//}
 
 // Process one component, if it needs to be updated, append it to tmpComponentsList
 
@@ -469,6 +467,7 @@ void Dot::processSingleComponent(Component component, ComponentsList &components
         finalComponent = updateSingleManifestIfNeeded(componentSpecified);  // If the component's dependency needs to be updated, update manifest, commit, create new tag
     }
     catch (MyError e) {
+        e.displayError();
         throw;
     }
 

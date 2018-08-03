@@ -60,7 +60,7 @@ public:
     void setDependenciesForPyramid();    // Look for dependencies for each component
     void updateLocalManifests();
     int pushLocalCommits();     // Push local commits to remote
-    int makePackages();      // Create package
+//    int makePackages();      // Create package
     static QString updateTag(const QString &tag);
     virtual void setComponentToUpdate(Component componentToUpdate);    // Add a component into the component list to be udpated
     int generatePackagesWithoutSourceCode();

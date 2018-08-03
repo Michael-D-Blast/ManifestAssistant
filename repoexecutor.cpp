@@ -1,6 +1,7 @@
 #include "repoexecutor.h"
 #include "cmdexecutor.h"
 #include "myerror.h"
+#include <QDebug>
 
 RepoExecutor::RepoExecutor()
 {
@@ -13,12 +14,19 @@ ComponentsList RepoExecutor::getList(QString dir)
     QStringList output;
     CmdExecutor cmd("repo list");
 
-    try {
+    qDebug() << "repo list in " + dir + " ...";
+
+    try
+    {
         output = cmd.execute(dir);
-    } catch (MyError e) {
+    }
+    catch (MyError e)
+    {
+        e.displayError();
         throw;
     }
 
+    // The first component is itself, so remote it.
     output.removeAt(0);
 
     QStringList::const_iterator i;
