@@ -151,12 +151,13 @@ void Dot::setDependenciesForPyramid()
                     else    // otherwise, this package has source code
                     {
                         git.checkout(dependencyPyramid[i][j].getTag(), PACKAGES_SOURCE_CODES_DIR + "/" + component);    // git checkout the source code to the tag
+                        repo.select(PACKAGES_SOURCE_CODES_DIR + "/" + component);
                         dependencies = repo.getList(PACKAGES_SOURCE_CODES_DIR + "/" + component);       // call repo list --names-only to get its dependencies
                     }
                 }
                 else    // If this component is built form source code
                 {
-                    dependencies = repo.getList(WORKSPACE_DIR + "/" + component);   // call repo list in workspace to get its dependencies
+                    dependencies = getComponentDependenciesFromDependencyTree(component);      // read its dependencies from repo.dot
                 }
             }
             catch (MyError e)

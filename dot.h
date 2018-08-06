@@ -83,16 +83,12 @@ private:
     int getParentPosInLevel(int pairIndex, int level);
     int getChildPosInLevel(int pairIndex, int level);
     void removeChildIfInUpperLevel(int pairIndex, int level);
-
     // We need to change the componentsListNewAdded
     void processSingleComponent(Component component, ComponentsList &componentsListNewAdded);
-
     // Check if the component's manifest needs to be udpated, if yes, update it and return true, otherwise, return false.
     Component updateSingleManifestIfNeeded(Component component);
-
     // Check if component is in componentsToUpdate, if yes, return new component infomation, otherwise, return itself
     Component componentSpecifiedTo(Component component);
-
     // Set Methods
     void updateComponentTagInUpdateList(Component component);
     void removeOldComponentInUpdateList(QString componentName);     // remove the component from the update list

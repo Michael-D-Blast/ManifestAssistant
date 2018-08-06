@@ -8,6 +8,25 @@ RepoExecutor::RepoExecutor()
 
 }
 
+// TODO: Add a arg to specify platform
+
+void RepoExecutor::select(QString dir)
+{
+    CmdExecutor cmd("repo select");
+
+    qDebug() << "repo select in " + dir + " ...";
+
+    try
+    {
+        cmd.execute(dir);
+    }
+    catch (MyError e)
+    {
+        e.displayError();
+        throw;
+    }
+}
+
 ComponentsList RepoExecutor::getList(QString dir)
 {
     ComponentsList dependencies;

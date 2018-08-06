@@ -9,6 +9,7 @@ class RepoExecutor
 public:
     RepoExecutor();
 
+    void select(QString dir = "");
     ComponentsList getList(QString dir = "");
 };
 
