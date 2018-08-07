@@ -40,9 +40,9 @@ int main(int argc, char *argv[])
     w.dot.generateDependencyPyramid();
     w.dot.generatePackagesWithoutSourceCode();
 //    w.dot.displayPackagesWithoutSourceCode();
-    w.dot.fetchSourceCodesOfPackages();
+//    w.dot.fetchSourceCodesOfPackages();
     w.dot.setDependenciesForPyramid();
-    w.dot.displayDependencyPyramid();
+//    w.dot.displayDependencyPyramid();
 
     w.dot.generateAllComponentsList();
 

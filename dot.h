@@ -92,7 +92,7 @@ private:
     // Set Methods
     void updateComponentTagInUpdateList(Component component);
     void removeOldComponentInUpdateList(QString componentName);     // remove the component from the update list
-    int makeSinglePackage(Component component);
+    void makeSinglePackage(Component component);
     ComponentsList getComponentDependenciesFromDependencyTree(QString component);      // Iterate the dependency tree, get the dependencies for the component which is a package and hasn't source code
 };
 

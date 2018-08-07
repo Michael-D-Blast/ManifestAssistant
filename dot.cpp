@@ -140,31 +140,7 @@ void Dot::setDependenciesForPyramid()
             GitExecutor git;
             RepoExecutor repo;
 
-            try
-            {
-                if (repoEnv->isPackage(component))  // If this is a package
-                {
-                    if (packagesWithoutSourceCode.contains(component))  // and it doesn't have source code
-                    {
-                        dependencies = getComponentDependenciesFromDependencyTree(component);      // read its dependencies from repo.dot
-                    }
-                    else    // otherwise, this package has source code
-                    {
-                        git.checkout(dependencyPyramid[i][j].getTag(), PACKAGES_SOURCE_CODES_DIR + "/" + component);    // git checkout the source code to the tag
-                        repo.select(PACKAGES_SOURCE_CODES_DIR + "/" + component);
-                        dependencies = repo.getList(PACKAGES_SOURCE_CODES_DIR + "/" + component);       // call repo list --names-only to get its dependencies
-                    }
-                }
-                else    // If this component is built form source code
-                {
-                    dependencies = getComponentDependenciesFromDependencyTree(component);      // read its dependencies from repo.dot
-                }
-            }
-            catch (MyError e)
-            {
-                e.displayError();
-                throw;
-            }
+            dependencies = getComponentDependenciesFromDependencyTree(component);
 
             dependencyPyramid[i][j].appendDependency(dependencies);
         }
@@ -221,26 +197,18 @@ void Dot::removeOldComponentInUpdateList(QString componentName)
     }
 }
 
-int Dot::makeSinglePackage(Component component)
+void Dot::makeSinglePackage(Component component)
 {
-    int ret = 0;
-
-    if (component.hasSourceCode(packagesWithoutSourceCode))
-    {
-        ComponentSrcDir build(TMP_COMPONENT_DIR, "Build", "sz");
-        if (!build.exists())
-            build.init();
-
-        ComponentSrcDir componentSrcDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
-        componentSrcDir.makePackage();
-    }
-    else
+    try
     {
         ComponentPkgDir componentPkgDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
         componentPkgDir.makePackage();
     }
-
-    return ret;
+    catch (MyError e)
+    {
+        e.displayError();
+        throw;
+    }
 }
 
 ComponentsList Dot::getComponentDependenciesFromDependencyTree(QString component)
@@ -394,7 +362,11 @@ int Dot::pushLocalCommits()
         // So We still need to checkout by needToBeUpdated
 
         if (c.needToBeUpdated()) {
-            if (!c.isPackageWithoutSourceCode(repoEnv, packagesWithoutSourceCode))
+            if (c.isPackage(repoEnv))
+            {
+                makeSinglePackage(c);
+            }
+            else
             {
                 qDebug() << "Push local commits of " << c.getName() << " to remote branch " << c.getBranchToCommit();
 
@@ -408,11 +380,6 @@ int Dot::pushLocalCommits()
                     e.displayError();
                     return -1;
                 }
-            }
-
-            if (c.isPackage(repoEnv))
-            {
-                makeSinglePackage(c);
             }
         }
     }
@@ -504,21 +471,8 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
         {
             if (component.isPackage(repoEnv))    // Component is package
             {
-                if (component.hasSourceCode(packagesWithoutSourceCode))    // Component is package, and has source code
-                {
-                    ComponentSrcDir componentSrcDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
-                    componentSrcDir.init();
-
-                    if (!componentSrcDir.canMakePkg())    // Component is package, has source code, but can't make package
-                    {
-                        throw MyError(-1, "This package has source code, but can't make package", __LINE__, __FUNCTION__);
-                    }
-                }
-                else    // Component is package, but doesn't have source code
-                {
-                    ComponentPkgDir componentPkgDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
-                    componentPkgDir.init();
-                }
+                ComponentPkgDir componentPkgDir(TMP_COMPONENT_DIR, component.getName(), component.getTag());
+                componentPkgDir.init();
             }
             else    // Component is source
             {
@@ -540,7 +494,7 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
         if (component.getName() != dependencyPyramid[0][0].getName())
             component.updateTag();  // Just update tag in object, not create a real tag in component dir
 
-        if (component.isPackageWithoutSourceCode(repoEnv, packagesWithoutSourceCode))   // For package that we don't its source code
+        if (component.isPackage(repoEnv))   // For package that we don't its source code
         {
             RepoManifest repoManifest(TMP_COMPONENT_DIR + "/" + component.getName());
             repoManifest.updateVersionTo(component.getTag());
