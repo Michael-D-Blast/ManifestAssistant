@@ -9,7 +9,7 @@
 
 // TODO: Calulate the path according to the working dir environment
 
-#define MY_DEBUG
+//#define MY_DEBUG
 
 QWaitCondition waitCondition;
 QMutex complete;
@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
                                                      | QFileDialog::DontResolveSymlinks);
 
     QString dotFile = QFileDialog::getOpenFileName(0, "Please choose repo.dot", w.dot.workingDir + "/obj");
+    QString envFile = QFileDialog::getOpenFileName(0, "Please choose repo.env", w.dot.workingDir + "/obj");
 #endif
 
     RepoEnv repoEnv(envFile);
