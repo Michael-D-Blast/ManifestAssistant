@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
                                                      QFileDialog::ShowDirsOnly
                                                      | QFileDialog::DontResolveSymlinks);
 
+    if (w.dot.workingDir.isEmpty()) {
+        qDebug() << "Working directory is not specified!";
+        return(1);
+    }
+
     QString dotFile = QFileDialog::getOpenFileName(0, "Please choose repo.dot", w.dot.workingDir + "/obj");
     QString envFile = QFileDialog::getOpenFileName(0, "Please choose repo.env", w.dot.workingDir + "/obj");
 #endif
