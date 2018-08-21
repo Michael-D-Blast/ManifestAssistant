@@ -26,4 +26,4 @@ done
 
 cp $exe -vi $release_dir
 
-tar -czvf ${exe}_$(uname -m).tgz $release_dir
+tar -czvf ${exe}_$(uname -m).tgz $(basename $release_dir)
