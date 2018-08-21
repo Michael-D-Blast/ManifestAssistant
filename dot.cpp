@@ -494,7 +494,7 @@ Component Dot::updateSingleManifestIfNeeded(Component component)
         if (component.getName() != dependencyPyramid[0][0].getName())
             component.updateTag();  // Just update tag in object, not create a real tag in component dir
 
-        if (component.isPackage(repoEnv))   // For package that we don't its source code
+        if (component.isPackage(repoEnv))
         {
             RepoManifest repoManifest(TMP_COMPONENT_DIR + "/" + component.getName());
             repoManifest.updateVersionTo(component.getTag());

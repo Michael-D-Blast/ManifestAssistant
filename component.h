@@ -42,7 +42,7 @@ public:
     void appendDependency(ComponentsList dependencies);
     int updateBuildInManifest();    // Update BUILD in manifest
     int commitChangeOfManifest();
-    int creatNewTag();
+    void creatNewTag();
     void updateTag(void);
     int generateCommitMessageFileBetweenTags(QString oldTag, QString newTag);    // For components whose souce code has been changed
     int setCommitMessageOfDependency(Component oldDependency, Component newDependency);

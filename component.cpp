@@ -173,14 +173,13 @@ int Component::commitChangeOfManifest()
     return 0;
 }
 
-int Component::creatNewTag()
+void Component::creatNewTag()
 {
 #ifdef DO_DUMMY_PROCESS
     qDebug() << "Dummy: creat a new tag for " << name;
 
     return 0;
 #endif
-    int ret = 0;
     GitExecutor gitExecutor;
 
     // Git tag
@@ -188,10 +187,8 @@ int Component::creatNewTag()
         gitExecutor.tag(tag, TMP_COMPONENT_DIR + "/" + name);
     } catch (MyError e) {
         e.displayError();
-        return -1;
+        throw;
     }
-
-    return ret;
 }
 
 void Component::updateTag(void)

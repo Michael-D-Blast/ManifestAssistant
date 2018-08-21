@@ -56,7 +56,6 @@ LocalCommitsCheckDialog	localcommitscheckdialog.h	/^class LocalCommitsCheckDialo
 MANIFESTEDITOR_H	manifesteditor.h	2;"	d
 MT_COMPONENT_OPTS_KEYWORD	repoenv.cpp	/^const QString MT_COMPONENT_OPTS_KEYWORD = "MT_COMPONENT_OPTS";$/;"	v
 MYERROR_H	myerror.h	2;"	d
-MY_DEBUG	main.cpp	12;"	d	file:
 ManifestEditor	manifesteditor.cpp	/^ManifestEditor::ManifestEditor()$/;"	f	class:ManifestEditor
 ManifestEditor	manifesteditor.cpp	/^ManifestEditor::ManifestEditor(QString workdir, QString component) :$/;"	f	class:ManifestEditor
 ManifestEditor	manifesteditor.h	/^class ManifestEditor : public FileEditor$/;"	c
@@ -185,8 +184,7 @@ main	main.cpp	/^int main(int argc, char *argv[])$/;"	f
 makePackage	componentdir.cpp	/^void ComponentDir::makePackage()$/;"	f	class:ComponentDir
 makePackage	componentpkgdir.cpp	/^void ComponentPkgDir::makePackage()$/;"	f	class:ComponentPkgDir
 makePackage	componentsrcdir.cpp	/^void ComponentSrcDir::makePackage()$/;"	f	class:ComponentSrcDir
-makePackages	dot.cpp	/^int Dot::makePackages()$/;"	f	class:Dot
-makeSinglePackage	dot.cpp	/^int Dot::makeSinglePackage(Component component)$/;"	f	class:Dot
+makeSinglePackage	dot.cpp	/^void Dot::makeSinglePackage(Component component)$/;"	f	class:Dot
 msg	myerror.h	/^    QString msg;$/;"	m	class:MyError
 name	component.h	/^    QString name;$/;"	m	class:Component
 name	dialog.h	/^        QComboBox *name;$/;"	m	struct:Dialog::ComponentInputter
@@ -199,6 +197,7 @@ packagesWithoutSourceCode	dot.h	/^    QStringList packagesWithoutSourceCode;$/;"
 parent	dot.h	/^    Component parent;$/;"	m	class:DependencyPair
 parseComponentOpts	repoenv.cpp	/^int RepoEnv::parseComponentOpts(QString componentOpts)$/;"	f	class:RepoEnv
 parseDependencyTree	dot.cpp	/^bool Dot::parseDependencyTree()$/;"	f	class:Dot
+print_usage	makerelease.sh	/^print_usage ()$/;"	f
 processLineOfDependencyTree	dot.cpp	/^void Dot::processLineOfDependencyTree(QString line)$/;"	f	class:Dot
 processSingleComponent	dot.cpp	/^void Dot::processSingleComponent(Component component, ComponentsList &componentsListNewAdded)$/;"	f	class:Dot
 prompt	localcommitscheckdialog.h	/^    QLabel *prompt;$/;"	m	class:LocalCommitsCheckDialog
@@ -219,6 +218,7 @@ rootComponent	dot.h	/^    QString rootComponent;      \/\/ The entry component o
 run	backendthread.cpp	/^void BackendThread::run()$/;"	f	class:BackendThread
 run	pushthread.cpp	/^void PushThread::run()$/;"	f	class:PushThread
 saveBranch	branchdialog.cpp	/^void BranchDialog::saveBranch()$/;"	f	class:BranchDialog
+select	repoexecutor.cpp	/^void RepoExecutor::select(QString dir)$/;"	f	class:RepoExecutor
 setBranchToCommit	component.cpp	/^void Component::setBranchToCommit(QString branchToCommit)$/;"	f	class:Component
 setBranches	component.cpp	/^void Component::setBranches(QStringList branches)$/;"	f	class:Component
 setChild	dot.cpp	/^void DependencyPair::setChild(QString name, QString tag)$/;"	f	class:DependencyPair
