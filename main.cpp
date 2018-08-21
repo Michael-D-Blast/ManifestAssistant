@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include "localcommitscheckdialog.h"
 #include "repoenv.h"
+#include "version.h"
 
 // TODO: Calulate the path according to the working dir environment
 
@@ -16,6 +17,19 @@ QMutex complete;
 
 int main(int argc, char *argv[])
 {
+    for (int i = 1; i < argc; ++i) {
+        QString arg(argv[i]);
+//        qDebug() << arg;
+
+        if (arg == "-V") {
+            qDebug() << "Version: " + QString(version);
+            return 0;
+        } else {
+            qDebug() << "Unknown arguments";
+            return -1;
+        }
+    }
+
     QApplication a(argc, argv);
     Dialog w;
 

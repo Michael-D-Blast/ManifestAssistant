@@ -53,6 +53,7 @@ HEADERS  += dialog.h \
     workspace.h \
     repomanifest.h \
     componentpkgdir.h \
-    componentsrcdir.h
+    componentsrcdir.h \
+    version.h
 
 FORMS    +=
