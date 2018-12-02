@@ -73,7 +73,7 @@ def update_manifest(current_components, new_components) :
 			if component.is_pkg() :
 				raise "component cannnot be a pkg"
 
-			print("git clone {}".format(component.name))
+			print("\033[32mgit clone {}\033[0m".format(component.name))
 
 			updated_list.append(component.name)
 
