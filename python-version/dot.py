@@ -35,7 +35,7 @@ class Dot :
 		# Generate all_components
 		for pair in self._component_pairs :
 			# Deal with dependent
-			index = _index_in_all_comonents(pair[0].name)
+			index = self._index_in_all_comonents(pair[0].name)
 
 			if index >= 0 :		# already in all components
 				self._all_components[index].add_dependency(pair[1].name)
@@ -43,18 +43,18 @@ class Dot :
 			else :		# not in all components yet
 				component = ExpandedComponent(pair[0].name, pair[0].tag)
 				component.add_dependency(pair[1].name)
-				_insert_component_to_all_components(component)
+				self._insert_component_to_all_components(component)
 				dependent_level = component.level
 
 			# Deal with dependency
-			index = _index_in_all_comonents(pair[1].name)
+			index = self._index_in_all_comonents(pair[1].name)
 
 			if index >= 0 :		# already in all components
 				self._all_components[index].level = dependent_level + 1
 			else :		# not in all components yet
 				component = ExpandedComponent(pair[1].name, pair[1].tag)
 				component.level = dependent_level + 1
-				_insert_component_to_all_components(component)
+				self._insert_component_to_all_components(component)
 
 	@property
 	def component_pairs(self) :
@@ -62,10 +62,10 @@ class Dot :
 			print("{} -> {}".format(pairs[0], pairs[1]))
 
 	@property
-	def components(self) :
+	def component_names(self) :
 		component_names = []
 		for c in self._all_components :
-			component_names += c.name
+			component_names.append(c.name)
 
 		return component_names
 

@@ -22,17 +22,17 @@ class Component :
 
 	@property
 	def name(self) :
-		return _name
+		return self._name
 
 	@property
 	def tag(self) :
-		return _tag
+		return self._tag
 
 class ExpandedComponent(Component) :
 	def __init__(self, name, tag) :
 		super().__init__(name, tag)
 
-		_level = 0
+		self._level = 0
 		self._dependencies = []
 
 	def add_dependency(self, name) :
@@ -40,7 +40,7 @@ class ExpandedComponent(Component) :
 
 	@property
 	def level(self) :
-		return _level
+		return self._level
 
 	# This is used for get the level of expanded_component as the key in sort method
 	def level_for_sort(expanded_component) :
