@@ -86,3 +86,6 @@ class Dot :
 	def all_components_in_reverse_order(self) :
 		return sorted(self._all_components, key=ExpandedComponent.level_for_sort, reverse=True)
 	
+	def display(self) :
+		for c in self._all_components :
+			print("name: {}\ttag: {}\tlevel: {}\ndependencies: {}".format(c.name, c.tag, c.level, c.dependencies))

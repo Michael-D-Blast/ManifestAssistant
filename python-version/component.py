@@ -48,4 +48,11 @@ class ExpandedComponent(Component) :
 
 	@level.setter
 	def level(self, new_level) :
-		_level = new_level
+		self._level = new_level
+
+	@property
+	def dependencies(self) :
+		return self._dependencies
+
+	def is_pkg(self) :
+		return False
